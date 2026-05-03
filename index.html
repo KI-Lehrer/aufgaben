@@ -3831,14 +3831,14 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">Datenverwaltung</h3>
-                <p class="card-subtitle">Du kannst jederzeit mit frischen Beispieldaten neu starten.</p>
+                <p class="card-subtitle">Du kannst jederzeit alle deine Daten komplett löschen und neu starten.</p>
               </div>
             </div>
             <div class="danger-zone">
-              <strong>Alle Daten zurücksetzen</strong>
-              <p>Alle aktuellen Einträge in Hausaufgaben, Prüfungen, Stundenplan, Fächern und Einstellungen werden entfernt und mit den Startdaten neu geladen.</p>
+              <strong>Alle Daten unwiderruflich löschen</strong>
+              <p>Alle aktuellen Einträge in Hausaufgaben, Prüfungen, Stundenplan und Fächern werden dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.</p>
               <div class="button-row" style="margin-top:16px">
-                <button class="danger-button" type="button" data-action="open-reset-modal">Alle Daten zurücksetzen</button>
+                <button class="danger-button" type="button" data-action="open-reset-modal">Alle Daten löschen</button>
               </div>
             </div>
           </article>
@@ -4337,14 +4337,14 @@
         <div class="modal-card">
           <div class="modal-header">
             <div>
-              <p class="eyebrow">Bestätigung</p>
-              <h3 class="card-title">Alle Daten zurücksetzen?</h3>
-              <p>Deine aktuellen Daten werden ersetzt. Anschließend werden die Beispieldaten lokal und in deiner Cloud neu angelegt.</p>
+              <p class="eyebrow" style="color: var(--red);">Gefahr</p>
+              <h3 class="card-title">Alle Daten dauerhaft löschen?</h3>
+              <p>Bist du sicher? Alle deine Fächer, Hausaufgaben, Prüfungen und Lektionen werden unwiderruflich gelöscht. Es bleiben keine Daten zurück.</p>
             </div>
             <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <div class="button-row">
-            <button class="danger-button" type="button" data-action="confirm-reset">Ja, alles zurücksetzen</button>
+            <button class="danger-button" type="button" data-action="confirm-reset">Ja, unwiderruflich löschen</button>
             <button class="ghost-button" type="button" data-action="close-modal">Abbrechen</button>
           </div>
         </div>
@@ -4913,11 +4913,18 @@
       }
 
       if (action === "confirm-reset") {
-        state = createSampleState();
+        state = {
+          subjects: [],
+          homework: [],
+          exams: [],
+          timetable: [],
+          drafts: {},
+          settings: { ...state.settings }
+        };
         ui.expandedHomework.clear();
         ui.expandedExams.clear();
         ui.selectedDay = null;
-        saveState({ message: "Daten wurden zurückgesetzt" });
+        saveState({ message: "Alle Daten wurden gelöscht" });
         closeModal();
         renderApp();
       }
