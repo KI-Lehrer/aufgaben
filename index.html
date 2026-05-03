@@ -3951,9 +3951,12 @@
                     <p>${selected.summary.subjects} Fächer · ${selected.summary.homework} Hausaufgaben · ${selected.summary.openHomework} offen · ${selected.summary.exams} Prüfungen · ${selected.summary.lessons} Lektionen</p>
                   </div>
                 </div>
-                <div class="button-row" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
+                <div class="button-row" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; gap: 10px;">
                   <button class="${selected.approved ? "danger-button" : "button"}" type="button" data-action="admin-toggle-approval" data-uid="${escapeHtml(selected.uid)}" data-approved="${selected.approved ? 'false' : 'true'}">
                     ${selected.approved ? "Benutzer löschen (sperren)" : "Genehmigen"}
+                  </button>
+                  <button class="button" type="button" data-action="admin-seed-user" data-uid="${escapeHtml(selected.uid)}">
+                    <span class="material-symbols-outlined" style="font-size: 1em; margin-right: 6px;">database</span> Beispieldaten laden
                   </button>
                 </div>
                 <div class="field" style="margin-top:16px">
@@ -4667,9 +4670,18 @@
         if (!appStatus.isAdmin) return;
         const uid = button.dataset.uid;
         const approved = button.dataset.approved === "true";
-        if (!approved && !window.confirm("Achtung: Dies löscht den Benutzer und alle seine Daten unwiderruflich! Fortfahren?")) {
+        if (!approved) {
+          // Deleting user — show custom modal instead of window.confirm
+          const userName = appStatus.adminDetail?.displayName || appStatus.adminDetail?.email || uid;
+          openModal("confirm-delete", {
+            title: `„${userName}" endgültig löschen?`,
+            text: "Der Benutzer wird aus Firebase Authentication, Firestore und den Genehmigungen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+            confirmAction: "confirm-delete-user",
+            payloadId: uid
+          });
           return;
         }
+        // Approving user — execute directly
         button.disabled = true;
         try {
           const token = await getFreshIdToken();
@@ -4681,13 +4693,42 @@
             },
             body: JSON.stringify({ uid, approved })
           });
-          showToast("Status aktualisiert");
+          showToast("Benutzer genehmigt");
           await refreshAdminAccess();
           renderApp();
         } catch (error) {
           console.error(error);
           showToast("Aktualisierung fehlgeschlagen");
           button.disabled = false;
+        }
+        return;
+      }
+
+      if (action === "confirm-delete-user") {
+        const uid = button.dataset.targetId;
+        if (!uid || !appStatus.isAdmin) return;
+        closeModal();
+        try {
+          const token = await getFreshIdToken();
+          const response = await fetch("/api/admin/approve", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ uid, approved: false })
+          });
+          if (!response.ok) {
+            throw new Error("API-Fehler");
+          }
+          showToast("Benutzer gelöscht");
+          ui.adminSelectedUid = "";
+          appStatus.adminDetail = null;
+          await refreshAdminAccess();
+          renderApp();
+        } catch (error) {
+          console.error(error);
+          showToast("Löschen fehlgeschlagen");
         }
         return;
       }
@@ -4708,6 +4749,35 @@
             loadAdminUserDetail(ui.adminSelectedUid);
           }
         });
+        return;
+      }
+
+      if (action === "admin-seed-user") {
+        if (!appStatus.isAdmin) return;
+        const uid = button.dataset.uid;
+        if (!uid) return;
+        button.disabled = true;
+        try {
+          const token = await getFreshIdToken();
+          const response = await fetch("/api/admin/seed", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ uid })
+          });
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || "Seed fehlgeschlagen");
+          }
+          showToast("Beispieldaten wurden geladen");
+          await loadAdminUserDetail(uid);
+        } catch (error) {
+          console.error(error);
+          showToast("Beispieldaten konnten nicht geladen werden");
+          button.disabled = false;
+        }
         return;
       }
 
