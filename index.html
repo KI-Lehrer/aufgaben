@@ -4625,7 +4625,7 @@
       renderApp();
     }
 
-    function handleAction(button) {
+    async function handleAction(button) {
       const action = button.dataset.action;
       if (action === "set-auth-mode") {
         ui.authMode = button.dataset.authMode || "signin";
