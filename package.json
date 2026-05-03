@@ -5,7 +5,6 @@
   "description": "Stop & Learn deployed on Vercel with Firebase Auth, Firestore and admin APIs.",
   "scripts": {
     "start": "python3 -m http.server 4173 --bind 127.0.0.1",
-    "start:local": "node local-dev-server.mjs",
     "check:api": "node --check api/config.js && node --check api/_lib/firebase-admin.js && node --check api/admin/users.js"
   },
   "dependencies": {

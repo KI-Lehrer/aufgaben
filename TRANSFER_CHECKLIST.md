@@ -7,7 +7,6 @@
 - `.env.example`
 - `vercel.json`
 - `firestore.rules`
-- `local-dev-server.mjs`
 - `README.md`
 - `FIREBASE_VERCEL_SETUP.md`
 - `TRANSFER_STOP_AND_LEARN.md`
@@ -21,7 +20,7 @@
 
 1. Projektordner oeffnen.
 2. `npm install` ausfuehren.
-3. Lokal mit `npm run start:local` testen.
+3. Lokal mit `npm run start` testen.
 4. Firebase-Projektwerte bereithalten.
 5. In Vercel die Variablen aus `.env.example` setzen.
 6. In Firebase `E-Mail/Passwort` aktivieren.
