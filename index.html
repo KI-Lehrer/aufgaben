@@ -3965,6 +3965,15 @@
                     <span class="material-symbols-outlined" style="font-size: 1em; margin-right: 6px;">database</span> Beispieldaten laden
                   </button>
                 </div>
+                <div class="field" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
+                  <label for="admin-new-password">Neues Passwort setzen</label>
+                  <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <input id="admin-new-password" type="text" placeholder="Neues Passwort" style="flex: 1;">
+                    <button class="button" type="button" data-action="admin-reset-password" data-uid="${escapeHtml(selected.uid)}">
+                      <span class="material-symbols-outlined" style="font-size: 1em; margin-right: 4px;">key</span> Setzen
+                    </button>
+                  </div>
+                </div>
                 <div class="field" style="margin-top:16px">
                   <label for="admin-state-json">Gespeicherter Zustand</label>
                   <textarea id="admin-state-json" readonly style="min-height: 320px;">${escapeHtml(prettyJson(selected.state || {}))}</textarea>
@@ -4789,6 +4798,41 @@
         } catch (error) {
           console.error(error);
           showToast("Beispieldaten konnten nicht geladen werden");
+          button.disabled = false;
+        }
+        return;
+      }
+
+      if (action === "admin-reset-password") {
+        if (!appStatus.isAdmin) return;
+        const uid = button.dataset.uid;
+        const passwordInput = document.getElementById("admin-new-password");
+        const password = passwordInput?.value?.trim();
+        if (!uid || !password) {
+          showToast("Bitte ein Passwort eingeben");
+          return;
+        }
+        button.disabled = true;
+        try {
+          const token = await getFreshIdToken();
+          const response = await fetch("/api/admin/reset-password", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ uid, password })
+          });
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || "Passwort-Reset fehlgeschlagen");
+          }
+          passwordInput.value = "";
+          showToast("Passwort wurde gesetzt");
+        } catch (error) {
+          console.error(error);
+          showToast(error.message || "Passwort konnte nicht gesetzt werden");
+        } finally {
           button.disabled = false;
         }
         return;
