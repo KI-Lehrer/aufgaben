@@ -49,11 +49,13 @@ module.exports = async (req, res) => {
     const selectedUid = String(req.query.uid || "").trim();
 
     if (selectedUid) {
-      const [userRecord, userDoc] = await Promise.all([
+      const [userRecord, userDoc, approvalDoc] = await Promise.all([
         auth.getUser(selectedUid),
-        firestore.collection("users").doc(selectedUid).get()
+        firestore.collection("users").doc(selectedUid).get(),
+        firestore.collection("approvals").doc(selectedUid).get()
       ]);
       const state = userDoc.exists ? userDoc.data().state || {} : {};
+      const isApproved = approvalDoc.exists ? approvalDoc.data().approved === true : false;
 
       res.status(200).json({
         user: {
@@ -61,6 +63,7 @@ module.exports = async (req, res) => {
           email: userRecord.email || "",
           displayName: userRecord.displayName || "",
           disabled: Boolean(userRecord.disabled),
+          approved: isApproved,
           provider: userRecord.providerData[0]?.providerId || "password",
           createdAt: userRecord.metadata.creationTime || "",
           updatedAt: userDoc.exists && userDoc.data().updatedAt
@@ -73,14 +76,20 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const [authUsers, userDocs] = await Promise.all([
+    const [authUsers, userDocs, approvalDocs] = await Promise.all([
       listAllAuthUsers(auth),
-      firestore.collection("users").get()
+      firestore.collection("users").get(),
+      firestore.collection("approvals").get()
     ]);
 
     const statesByUid = new Map();
     userDocs.forEach((docSnapshot) => {
       statesByUid.set(docSnapshot.id, docSnapshot.data() || {});
+    });
+
+    const approvalsByUid = new Map();
+    approvalDocs.forEach((docSnapshot) => {
+      approvalsByUid.set(docSnapshot.id, docSnapshot.data()?.approved === true);
     });
 
     const users = authUsers.map((userRecord) => {
@@ -91,6 +100,7 @@ module.exports = async (req, res) => {
         email: userRecord.email || "",
         displayName: userRecord.displayName || "",
         disabled: Boolean(userRecord.disabled),
+        approved: approvalsByUid.get(userRecord.uid) || false,
         provider: userRecord.providerData[0]?.providerId || "password",
         createdAt: userRecord.metadata.creationTime || "",
         updatedAt: docData.updatedAt ? docData.updatedAt.toDate().toISOString() : "",

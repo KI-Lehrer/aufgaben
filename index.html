@@ -2433,6 +2433,23 @@
       appStatus.syncState = "saving";
       renderApp();
 
+      const approvalRef = doc(appStatus.db, "approvals", user.uid);
+      const approvalSnapshot = await getDoc(approvalRef);
+      if (!approvalSnapshot.exists() || approvalSnapshot.data()?.approved !== true) {
+        stopRemoteSubscription();
+        appStatus.mode = "pending_approval";
+        appStatus.syncState = "ready";
+        
+        // Listen to approval changes so it updates automatically
+        appStatus.unsubscribeState = onSnapshot(approvalRef, (snap) => {
+          if (snap.exists() && snap.data()?.approved === true) {
+            hydrateUserState(user); // Restart hydration when approved
+          }
+        });
+        renderApp();
+        return;
+      }
+
       const ref = userDocRef(user.uid);
       const snapshot = await getDoc(ref);
 
@@ -2818,6 +2835,19 @@
             <p class="eyebrow">Cloud</p>
             <h3 class="hero-headline">Deine Datenbank wird verbunden.</h3>
             <p class="hero-description">Einen Moment bitte. Sobald Firebase bereit ist, werden deine Daten geladen und live zwischen deinen Geräten synchronisiert.</p>
+          </section>
+        `;
+      }
+
+      if (appStatus.mode === "pending_approval") {
+        return `
+          <section class="hero-card">
+            <p class="eyebrow">Warten auf Freigabe</p>
+            <h3 class="hero-headline">Konto wird überprüft</h3>
+            <p class="hero-description">Dein Konto wurde erfolgreich erstellt, muss aber noch von einem Administrator freigeschaltet werden. Sobald dies passiert ist, erhältst du automatisch Zugriff.</p>
+            <div class="button-row" style="margin-top:24px">
+              <button class="ghost-button" type="button" data-action="log-out">Abmelden</button>
+            </div>
           </section>
         `;
       }
@@ -3828,17 +3858,20 @@
             ${appStatus.adminUsers.length ? `
               <div class="mini-list">
                 ${appStatus.adminUsers.map((user) => `
-                  <button class="mini-item ${ui.adminSelectedUid === user.uid ? "active" : ""}" type="button" data-action="select-admin-user" data-admin-uid="${user.uid}">
+                  <div class="mini-item">
                     <div class="mini-item-content">
                       <div class="list-summary-head">
                         <span class="soft-chip">${escapeHtml(user.provider || "password")}</span>
                         <span class="soft-chip">${user.disabled ? "deaktiviert" : "aktiv"}</span>
                       </div>
                       <h4>${escapeHtml(user.displayName || user.email || user.uid)}</h4>
-                      <p>${escapeHtml(user.email || "Keine E-Mail")} · ${escapeHtml(user.createdAt || "Unbekannt")}</p>
-                      <p>${user.summary.openHomework} offene Aufgaben · ${user.summary.exams} Prüfungen · ${user.summary.lessons} Lektionen</p>
+                      <div style="font-size:14px;color:var(--text-secondary);margin-bottom:8px">Registriert: ${new Date(user.createdAt).toLocaleDateString()}</div>
+                      <div style="font-size:14px;color:var(--text-secondary)">Genehmigt: <strong>${user.approved ? "Ja" : "Nein"}</strong></div>
                     </div>
-                  </button>
+                    <div>
+                      <button class="button" data-action="select-admin-user" data-admin-uid="${escapeHtml(user.uid)}">Details</button>
+                    </div>
+                  </div>
                 `).join("")}
               </div>
             ` : `
@@ -3869,7 +3902,7 @@
                   <div class="mini-item-content">
                     <div class="list-summary-head">
                       <span class="soft-chip">${escapeHtml(selected.uid)}</span>
-                      <span class="soft-chip">${selected.disabled ? "deaktiviert" : "aktiv"}</span>
+                      <span class="soft-chip">${selected.approved ? "genehmigt" : "wartet"}</span>
                     </div>
                     <h4>${escapeHtml(selected.displayName || selected.email || selected.uid)}</h4>
                     <p>${escapeHtml(selected.email || "Keine E-Mail")} · letzte Speicherung ${escapeHtml(selected.updatedAt || "Unbekannt")}</p>
@@ -3881,7 +3914,12 @@
                     <p>${selected.summary.subjects} Fächer · ${selected.summary.homework} Hausaufgaben · ${selected.summary.openHomework} offen · ${selected.summary.exams} Prüfungen · ${selected.summary.lessons} Lektionen</p>
                   </div>
                 </div>
-                <div class="field">
+                <div class="button-row" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
+                  <button class="${selected.approved ? "ghost-button" : "button"}" type="button" data-action="admin-toggle-approval" data-uid="${escapeHtml(selected.uid)}" data-approved="${selected.approved ? 'false' : 'true'}">
+                    ${selected.approved ? "Sperren" : "Genehmigen"}
+                  </button>
+                </div>
+                <div class="field" style="margin-top:16px">
                   <label for="admin-state-json">Gespeicherter Zustand</label>
                   <textarea id="admin-state-json" readonly style="min-height: 320px;">${escapeHtml(prettyJson(selected.state || {}))}</textarea>
                 </div>
@@ -4600,7 +4638,38 @@
         return;
       }
 
+      if (action === "admin-toggle-approval") {
+        if (!appStatus.isAdmin) return;
+        const uid = button.dataset.uid;
+        const approved = button.dataset.approved === "true";
+        button.disabled = true;
+        try {
+          const token = await getFreshIdToken();
+          await fetch("/api/admin/approve", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ uid, approved })
+          });
+          showToast("Status aktualisiert");
+          await refreshAdminAccess();
+          renderApp();
+        } catch (error) {
+          console.error(error);
+          showToast("Aktualisierung fehlgeschlagen");
+          button.disabled = false;
+        }
+        return;
+      }
+
       if (action === "sign-out") {
+        logOut();
+        return;
+      }
+
+      if (action === "log-out") {
         logOut();
         return;
       }
