@@ -1829,8 +1829,13 @@
           </div>
         </div>
         <div class="sidebar-footer-actions" id="sidebarFooterActions">
-          <button class="ghost-button" style="width: 100%; margin-top: 12px; color: var(--text-secondary);" type="button" data-action="sign-out">
-            Abmelden
+          <button class="ghost-button" style="width: 100%; margin-top: 12px; color: var(--text-secondary);" type="button" data-action="toggle-theme">
+            <span class="nav-icon">🌗</span>
+            <span>Design wechseln</span>
+          </button>
+          <button class="ghost-button" style="width: 100%; margin-top: 8px; color: var(--text-secondary);" type="button" data-action="sign-out">
+            <span class="nav-icon">🚪</span>
+            <span>Abmelden</span>
           </button>
         </div>
       </div>
@@ -2195,9 +2200,8 @@
         timetable,
         drafts: {},
         settings: {
-          name: "Lena",
           klasse: "2B",
-          darkMode: true,
+          darkMode: "auto",
           erinnerungen: true
         }
       };
@@ -2687,9 +2691,19 @@
     }
 
     function applyTheme() {
-      const theme = state.settings.darkMode ? "dark" : "light";
+      let theme = state.settings.darkMode;
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
       document.documentElement.setAttribute("data-theme", theme);
     }
+
+    // Höre auf System-Wechsel, wenn auf Auto
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+      if (state.settings.darkMode !== "light" && state.settings.darkMode !== "dark") {
+        applyTheme();
+      }
+    });
 
     function getSubject(subjectId) {
       return state.subjects.find((subject) => subject.id === subjectId) || null;
@@ -4329,6 +4343,25 @@
       `;
     }
 
+    function renderConfirmDeleteModal(payload) {
+      return `
+        <div class="modal-card">
+          <div class="modal-header">
+            <div>
+              <p class="eyebrow">Achtung</p>
+              <h3 class="card-title">${escapeHtml(payload.title)}</h3>
+              <p>${escapeHtml(payload.text)}</p>
+            </div>
+            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+          </div>
+          <div class="button-row">
+            <button class="danger-button" type="button" data-action="${escapeHtml(payload.confirmAction)}" data-target-id="${escapeHtml(payload.payloadId)}">Löschen</button>
+            <button class="ghost-button" type="button" data-action="close-modal">Abbrechen</button>
+          </div>
+        </div>
+      `;
+    }
+
     function renderModal() {
       const layer = document.getElementById("modalLayer");
       const root = document.getElementById("modalRoot");
@@ -4349,6 +4382,8 @@
         content = renderSubjectsModal(ui.modal.subjectId);
       } else if (ui.modal.type === "reset") {
         content = renderResetModal();
+      } else if (ui.modal.type === "confirm-delete") {
+        content = renderConfirmDeleteModal(ui.modal);
       }
 
       root.innerHTML = content;
@@ -4404,13 +4439,6 @@
     }
 
     function deleteHomework(homeworkId) {
-      const item = state.homework.find((entry) => entry.id === homeworkId);
-      if (!item) {
-        return;
-      }
-      if (!window.confirm(`Hausaufgabe "${item.title}" wirklich löschen?`)) {
-        return;
-      }
       state.homework = state.homework.filter((entry) => entry.id !== homeworkId);
       ui.expandedHomework.delete(homeworkId);
       saveState();
@@ -4418,13 +4446,6 @@
     }
 
     function deleteExam(examId) {
-      const exam = state.exams.find((entry) => entry.id === examId);
-      if (!exam) {
-        return;
-      }
-      if (!window.confirm(`Prüfung "${exam.title}" wirklich löschen?`)) {
-        return;
-      }
       state.exams = state.exams.filter((entry) => entry.id !== examId);
       ui.expandedExams.delete(examId);
       saveState();
@@ -4432,13 +4453,6 @@
     }
 
     function deleteLesson(lessonId) {
-      const lesson = state.timetable.find((entry) => entry.id === lessonId);
-      if (!lesson) {
-        return;
-      }
-      if (!window.confirm("Diese Lektion wirklich löschen?")) {
-        return;
-      }
       state.timetable = state.timetable.filter((entry) => entry.id !== lessonId);
       saveState();
       closeModal();
@@ -4447,19 +4461,7 @@
 
     function deleteSubject(subjectId) {
       const subject = getSubject(subjectId);
-      if (!subject) {
-        return;
-      }
-      const homeworkCount = state.homework.filter((entry) => entry.fachId === subjectId).length;
-      const examCount = state.exams.filter((entry) => entry.fachId === subjectId).length;
-      const lessonCount = state.timetable.filter((entry) => entry.fachId === subjectId).length;
-      const confirmed = window.confirm(
-        `Fach "${subject.name}" löschen?\n\nDavon betroffen:\n- ${homeworkCount} Hausaufgaben\n- ${examCount} Prüfungen\n- ${lessonCount} Lektionen`
-      );
-
-      if (!confirmed) {
-        return;
-      }
+      if (!subject) return;
 
       state.subjects = state.subjects.filter((entry) => entry.id !== subjectId);
       state.homework = state.homework.filter((entry) => entry.fachId !== subjectId);
@@ -4718,6 +4720,14 @@
         return;
       }
 
+      if (action === "toggle-theme") {
+        const currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        state.settings.darkMode = currentTheme;
+        saveState();
+        applyTheme();
+        return;
+      }
+
       if (action === "close-modal") {
         closeModal();
         return;
@@ -4770,22 +4780,75 @@
       }
 
       if (action === "delete-homework") {
-        deleteHomework(button.dataset.homeworkId);
+        const item = state.homework.find((entry) => entry.id === button.dataset.homeworkId);
+        if (item) {
+          openModal("confirm-delete", {
+            title: "Hausaufgabe löschen?",
+            text: `Soll die Aufgabe "${item.title}" unwiderruflich gelöscht werden?`,
+            confirmAction: "confirm-delete-homework",
+            payloadId: item.id
+          });
+        }
+        return;
+      }
+
+      if (action === "confirm-delete-homework") {
+        deleteHomework(button.dataset.targetId);
+        closeModal();
         return;
       }
 
       if (action === "delete-exam") {
-        deleteExam(button.dataset.examId);
+        const item = state.exams.find((entry) => entry.id === button.dataset.examId);
+        if (item) {
+          openModal("confirm-delete", {
+            title: "Prüfung löschen?",
+            text: `Soll die Prüfung "${item.title}" unwiderruflich gelöscht werden?`,
+            confirmAction: "confirm-delete-exam",
+            payloadId: item.id
+          });
+        }
+        return;
+      }
+
+      if (action === "confirm-delete-exam") {
+        deleteExam(button.dataset.targetId);
+        closeModal();
         return;
       }
 
       if (action === "delete-lesson") {
-        deleteLesson(button.dataset.lessonId);
+        openModal("confirm-delete", {
+          title: "Lektion löschen?",
+          text: "Soll dieser Eintrag aus dem Stundenplan entfernt werden?",
+          confirmAction: "confirm-delete-lesson",
+          payloadId: button.dataset.lessonId
+        });
+        return;
+      }
+
+      if (action === "confirm-delete-lesson") {
+        deleteLesson(button.dataset.targetId);
+        closeModal();
         return;
       }
 
       if (action === "delete-subject") {
-        deleteSubject(button.dataset.subjectId);
+        const item = state.subjects.find((entry) => entry.id === button.dataset.subjectId);
+        if (item) {
+          openModal("confirm-delete", {
+            title: "Fach löschen?",
+            text: `Soll das Fach "${item.name}" gelöscht werden?`,
+            confirmAction: "confirm-delete-subject",
+            payloadId: item.id
+          });
+        }
+        return;
+      }
+
+      if (action === "confirm-delete-subject") {
+        deleteSubject(button.dataset.targetId);
+        closeModal();
         return;
       }
 
