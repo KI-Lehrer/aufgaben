@@ -2487,9 +2487,16 @@
         appStatus.isApplyingRemoteState = true;
         state = normalizeState(remoteSnapshot.data().state);
         persistLocalCache(state);
-        appStatus.syncState = remoteSnapshot.metadata.hasPendingWrites ? "saving" : "ready";
+        const isPendingWrite = remoteSnapshot.metadata.hasPendingWrites;
+        appStatus.syncState = isPendingWrite ? "saving" : "ready";
         appStatus.mode = "ready";
-        renderApp();
+        // Don't re-render the whole app while a modal is open (causes flicker/focus loss)
+        // or when this is just the echo of our own pending write
+        if (!ui.modal && !isPendingWrite) {
+          renderApp();
+        } else {
+          renderTopbar();
+        }
         appStatus.isApplyingRemoteState = false;
       }, (error) => {
         console.error(error);
@@ -3782,11 +3789,11 @@
 
               <div class="toggle-card">
                 <div class="toggle-copy">
-                  <strong>Darstellung umschalten</strong>
-                  <p>Wechselt sofort zwischen dunklem und hellem Theme.</p>
+                  <strong>Dark Mode</strong>
+                  <p>Wechselt zwischen dunklem und hellem Erscheinungsbild.</p>
                 </div>
                 <label class="switch">
-                  <input type="checkbox" data-setting-toggle="darkMode" ${state.settings.darkMode ? "checked" : ""}>
+                  <input type="checkbox" data-setting-toggle="darkMode" ${(state.settings.darkMode === "dark" || (state.settings.darkMode !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? "checked" : ""}>
                   <span></span>
                 </label>
               </div>
@@ -4408,7 +4415,14 @@
       renderView();
       renderFab();
       if (appStatus.mode === "ready") {
-        renderModal();
+        // Don't re-render the modal if a form element inside it has focus (prevents flicker/focus loss)
+        const modalRoot = document.getElementById("modalRoot");
+        const activeEl = document.activeElement;
+        const isTypingInModal = modalRoot && activeEl && modalRoot.contains(activeEl) &&
+          (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.tagName === "SELECT");
+        if (!isTypingInModal) {
+          renderModal();
+        }
       } else {
         ui.modal = null;
         renderModal();
@@ -5077,7 +5091,7 @@
       }
 
       if (target.matches("[data-setting-toggle='darkMode']")) {
-        state.settings.darkMode = target.checked;
+        state.settings.darkMode = target.checked ? "dark" : "light";
         saveState({ silent: false });
         applyTheme();
         return;
