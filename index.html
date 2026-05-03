@@ -8,16 +8,17 @@
   <link rel="apple-touch-icon" href="./logo-stop-learn-square.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0f0f1a;
+      --bg: #151219;
       --bg-elevated: rgba(20, 20, 36, 0.86);
-      --surface: #17172a;
-      --surface-strong: #1a1a2e;
+      --surface: rgba(23, 23, 42, 0.65);
+      --surface-strong: rgba(26, 26, 46, 0.8);
       --surface-soft: rgba(255, 255, 255, 0.04);
       --line: rgba(255, 255, 255, 0.08);
-      --text: #f2f3f8;
+      --text: #e7e0e9;
       --muted: #a6accd;
       --accent: #7c5cbf;
       --accent-soft: rgba(124, 92, 191, 0.18);
@@ -29,13 +30,20 @@
       --shadow: 0 24px 60px rgba(2, 6, 23, 0.38);
       --radius: 18px;
       --radius-sm: 12px;
-      --transition: 0.2s ease;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       --sidebar-width: 272px;
       --sidebar-collapsed-width: 96px;
       --bottom-nav-height: 88px;
       --hour-height: 74px;
       --max-width: 1520px;
       --page-padding: 18px;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 1.25em;
     }
 
     html[data-theme="light"] {
@@ -1830,11 +1838,11 @@
         </div>
         <div class="sidebar-footer-actions" id="sidebarFooterActions">
           <button class="ghost-button" style="width: 100%; margin-top: 12px; color: var(--text-secondary);" type="button" data-action="toggle-theme">
-            <span class="nav-icon">🌗</span>
+            <span class="nav-icon material-symbols-outlined">contrast</span>
             <span>Design wechseln</span>
           </button>
           <button class="ghost-button" style="width: 100%; margin-top: 8px; color: var(--text-secondary);" type="button" data-action="sign-out">
-            <span class="nav-icon">🚪</span>
+            <span class="nav-icon material-symbols-outlined">logout</span>
             <span>Abmelden</span>
           </button>
         </div>
@@ -1844,7 +1852,7 @@
     <main class="main-shell">
       <div class="main-inner">
         <header class="topbar">
-          <button class="icon-button desktop-only" type="button" data-action="toggle-sidebar" aria-label="Sidebar umschalten">☰</button>
+          <button class="icon-button desktop-only" type="button" data-action="toggle-sidebar" aria-label="Sidebar umschalten"><span class="material-symbols-outlined">menu</span></button>
           <div class="topbar-brand">
             <img src="./logo-stop-learn-square.png" alt="Stop & Learn Logo">
           </div>
@@ -1903,43 +1911,43 @@
     const HOUR_HEIGHT = 74;
     const SECTION_META = {
       dashboard: {
-        icon: "🏠",
+        icon: "dashboard",
         title: "Heute-Übersicht",
         subtitle: "Dein Überblick für den aktuellen Tag.",
         eyebrow: "Dashboard"
       },
       stundenplan: {
-        icon: "📅",
+        icon: "calendar_view_week",
         title: "Stundenplan",
         subtitle: "Wochenansicht mit allen Fächern und Räumen.",
         eyebrow: "Stundenplan"
       },
       hausaufgaben: {
-        icon: "📝",
+        icon: "menu_book",
         title: "Hausaufgaben",
         subtitle: "Offene Aufgaben sortieren, abhaken und ergänzen.",
         eyebrow: "Aufgaben"
       },
       pruefungen: {
-        icon: "🏆",
+        icon: "school",
         title: "Prüfungen",
         subtitle: "Termine, Themen und Lernlisten im Blick behalten.",
         eyebrow: "Prüfungen"
       },
       kalender: {
-        icon: "📆",
+        icon: "calendar_month",
         title: "Kalender",
         subtitle: "Alle Hausaufgaben, Prüfungen und Lektionen in einer Ansicht.",
         eyebrow: "Kalender"
       },
       einstellungen: {
-        icon: "⚙️",
+        icon: "settings",
         title: "Einstellungen",
         subtitle: "Personalisierung, Darstellung und Datenverwaltung.",
         eyebrow: "Einstellungen"
       },
       admin: {
-        icon: "🔐",
+        icon: "admin_panel_settings",
         title: "Adminbereich",
         subtitle: "Nutzerkonten und gespeicherte Daten einsehen.",
         eyebrow: "Administration"
@@ -2798,7 +2806,7 @@
 
       const desktop = filteredEntries.map(([key, meta]) => `
         <button class="nav-button ${ui.section === key ? "active" : ""}" type="button" data-section="${key}">
-          <span class="nav-icon">${meta.icon}</span>
+          <span class="nav-icon material-symbols-outlined">${meta.icon}</span>
           <span class="nav-label">${escapeHtml(meta.title)}</span>
         </button>
       `).join("");
@@ -3293,8 +3301,8 @@
                       <input class="task-check" type="checkbox" data-homework-status="${item.id}" ${item.status === "erledigt" ? "checked" : ""}>
                       <span>${item.status === "erledigt" ? "Fertig" : "Offen"}</span>
                     </label>
-                    <button class="tiny-button" type="button" data-action="open-homework-modal" data-homework-id="${item.id}" aria-label="Hausaufgabe bearbeiten">✎</button>
-                    <button class="tiny-button danger" type="button" data-action="delete-homework" data-homework-id="${item.id}" aria-label="Hausaufgabe löschen">🗑</button>
+                    <button class="tiny-button" type="button" data-action="open-homework-modal" data-homework-id="${item.id}" aria-label="Hausaufgabe bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
+                    <button class="tiny-button danger" type="button" data-action="delete-homework" data-homework-id="${item.id}" aria-label="Hausaufgabe löschen"><span class="material-symbols-outlined" style="font-size: 1.1em;">delete</span></button>
                   </div>
                 </div>
 
@@ -3378,8 +3386,8 @@
                     </div>
                   </button>
                   <div class="inline-actions">
-                    <button class="tiny-button" type="button" data-action="open-exam-modal" data-exam-id="${exam.id}" aria-label="Prüfung bearbeiten">✎</button>
-                    <button class="tiny-button danger" type="button" data-action="delete-exam" data-exam-id="${exam.id}" aria-label="Prüfung löschen">🗑</button>
+                    <button class="tiny-button" type="button" data-action="open-exam-modal" data-exam-id="${exam.id}" aria-label="Prüfung bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
+                    <button class="tiny-button danger" type="button" data-action="delete-exam" data-exam-id="${exam.id}" aria-label="Prüfung löschen"><span class="material-symbols-outlined" style="font-size: 1.1em;">delete</span></button>
                   </div>
                 </div>
 
@@ -3617,7 +3625,7 @@
               <h3 class="card-title">${escapeHtml(formatDate(activeDate, { weekday: "long", day: "2-digit", month: "long", year: "numeric" }))}</h3>
               <p>${events.length ? `${events.length} Ereignisse an diesem Tag.` : "Für diesen Tag gibt es noch keine Einträge."}</p>
             </div>
-            ${ui.calendarView !== "day" ? `<button class="tiny-button" type="button" data-action="close-calendar-panel" aria-label="Panel schließen">✕</button>` : ""}
+            ${ui.calendarView !== "day" ? `<button class="tiny-button" type="button" data-action="close-calendar-panel" aria-label="Panel schließen"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>` : ""}
           </div>
           ${events.length ? `
             <div class="list-stack">
@@ -3806,7 +3814,7 @@
                         <div class="muted-text">${escapeHtml(subject.teacher || "Keine Lehrperson")} · Raum ${escapeHtml(subject.room || "—")}</div>
                       </div>
                     </div>
-                    <button class="tiny-button" type="button" data-action="open-subject-manager" data-subject-id="${subject.id}" aria-label="Fach bearbeiten">✎</button>
+                    <button class="tiny-button" type="button" data-action="open-subject-manager" data-subject-id="${subject.id}" aria-label="Fach bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
                   </div>
                 `).join("")}
               </div>
@@ -4003,11 +4011,11 @@
 
       if (ui.section === "hausaufgaben") {
         button.classList.remove("hidden");
-        button.textContent = "＋ Neue Hausaufgabe";
+        button.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px; font-size:1.1em;">add</span> Neue Hausaufgabe';
         button.dataset.action = "open-homework-modal";
       } else if (ui.section === "pruefungen") {
         button.classList.remove("hidden");
-        button.textContent = "＋ Neue Prüfung";
+        button.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px; font-size:1.1em;">add</span> Neue Prüfung';
         button.dataset.action = "open-exam-modal";
       } else {
         button.classList.add("hidden");
@@ -4032,7 +4040,7 @@
                 <h3 class="card-title">Bitte zuerst ein Fach anlegen</h3>
                 <p>Hausaufgaben referenzieren immer ein globales Fach. Öffne zuerst die Fächerverwaltung.</p>
               </div>
-              <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+              <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
             </div>
             <div class="button-row">
               <button class="button" type="button" data-action="open-subject-manager">Fächer verwalten</button>
@@ -4061,7 +4069,7 @@
               <h3 class="card-title">${homework ? "Hausaufgabe bearbeiten" : "Neue Hausaufgabe"}</h3>
               <p>Fach, Titel, Beschreibung, Fälligkeitsdatum und Notiz werden direkt gespeichert, sobald du bestätigst.</p>
             </div>
-            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+            <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <form class="form-grid" data-form="homework" data-draft-form="homework" data-draft-id="${escapeHtml(homework?.id || "new")}">
             <input type="hidden" name="id" value="${escapeHtml(homeworkValues.id || "")}">
@@ -4107,7 +4115,7 @@
                 <h3 class="card-title">Bitte zuerst ein Fach anlegen</h3>
                 <p>Prüfungen brauchen ein Fach als Referenz. Öffne zuerst die Fächerverwaltung.</p>
               </div>
-              <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+              <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
             </div>
             <div class="button-row">
               <button class="button" type="button" data-action="open-subject-manager">Fächer verwalten</button>
@@ -4137,7 +4145,7 @@
               <h3 class="card-title">${exam ? "Prüfung bearbeiten" : "Neue Prüfung"}</h3>
               <p>Themen werden als kommagetrennte Liste übernommen und können später mit einer Lern-Checkliste ergänzt werden.</p>
             </div>
-            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+            <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <form class="form-grid" data-form="exam" data-draft-form="exam" data-draft-id="${escapeHtml(exam?.id || "new")}">
             <input type="hidden" name="id" value="${escapeHtml(examValues.id || "")}">
@@ -4183,7 +4191,7 @@
                 <h3 class="card-title">Bitte zuerst ein Fach anlegen</h3>
                 <p>Eine Lektion braucht ein Fach als Basis. Erstelle zuerst mindestens ein Fach in der Verwaltung.</p>
               </div>
-              <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+              <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
             </div>
             <div class="button-row">
               <button class="button" type="button" data-action="open-subject-manager">Fächer verwalten</button>
@@ -4212,7 +4220,7 @@
               <h3 class="card-title">${lesson ? "Lektion bearbeiten" : "Neue Lektion"}</h3>
               <p>Lege Wochentag, Fach, Zeit und Raum fest. Überschneidungen werden erkannt, damit der Plan sauber bleibt.</p>
             </div>
-            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+            <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <form class="form-grid" data-form="lesson" data-draft-form="lesson" data-draft-id="${escapeHtml(lesson?.id || "new")}">
             <input type="hidden" name="id" value="${escapeHtml(values.id || "")}">
@@ -4267,7 +4275,7 @@
               <h3 class="card-title">Globale Fächer pflegen</h3>
               <p>Fächer sind die zentrale Datenquelle für Stundenplan, Hausaufgaben, Prüfungen und Kalender. Wenn du ein Fach löschst, werden referenzierte Einträge ebenfalls entfernt.</p>
             </div>
-            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+            <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <div class="subject-manager">
             <div class="subject-list">
@@ -4281,8 +4289,8 @@
                     </div>
                   </div>
                   <div class="subject-row-actions">
-                    <button class="tiny-button" type="button" data-action="open-subject-manager" data-subject-id="${item.id}" aria-label="Fach bearbeiten">✎</button>
-                    <button class="tiny-button danger" type="button" data-action="delete-subject" data-subject-id="${item.id}" aria-label="Fach löschen">🗑</button>
+                    <button class="tiny-button" type="button" data-action="open-subject-manager" data-subject-id="${item.id}" aria-label="Fach bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
+                    <button class="tiny-button danger" type="button" data-action="delete-subject" data-subject-id="${item.id}" aria-label="Fach löschen"><span class="material-symbols-outlined" style="font-size: 1.1em;">delete</span></button>
                   </div>
                 </div>
               `).join("") : `
@@ -4333,7 +4341,7 @@
               <h3 class="card-title">Alle Daten zurücksetzen?</h3>
               <p>Deine aktuellen Daten werden ersetzt. Anschließend werden die Beispieldaten lokal und in deiner Cloud neu angelegt.</p>
             </div>
-            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+            <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <div class="button-row">
             <button class="danger-button" type="button" data-action="confirm-reset">Ja, alles zurücksetzen</button>
@@ -4352,7 +4360,7 @@
               <h3 class="card-title">${escapeHtml(payload.title)}</h3>
               <p>${escapeHtml(payload.text)}</p>
             </div>
-            <button class="tiny-button" type="button" data-action="close-modal">✕</button>
+            <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
           <div class="button-row">
             <button class="danger-button" type="button" data-action="${escapeHtml(payload.confirmAction)}" data-target-id="${escapeHtml(payload.payloadId)}">Löschen</button>
