@@ -1823,10 +1823,15 @@
       </div>
       <nav class="nav-stack" id="desktopNav"></nav>
       <div class="sidebar-footer">
-        <div class="sidebar-footer-card">
+        <div class="sidebar-footer-card" id="sidebarFooterCard">
           <div class="sidebar-footer-copy">
-            <p>Deine Fächer, Termine und Prüfungen werden lokal zwischengespeichert und mit Firebase auf all deinen Geräten synchronisiert.</p>
+            <p>Deine Daten werden lokal zwischengespeichert und mit der Cloud synchronisiert.</p>
           </div>
+        </div>
+        <div class="sidebar-footer-actions" id="sidebarFooterActions">
+          <button class="ghost-button" style="width: 100%; margin-top: 12px; color: var(--text-secondary);" type="button" data-action="sign-out">
+            Abmelden
+          </button>
         </div>
       </div>
     </aside>
@@ -2771,8 +2776,13 @@
     }
 
     function renderNav() {
-      const entries = Object.entries(SECTION_META).filter(([key]) => key !== "admin" || appStatus.isAdmin);
-      const desktop = entries.map(([key, meta]) => `
+      const filteredEntries = Object.entries(SECTION_META).filter(([key]) => {
+        if (key === "admin" && !appStatus.isAdmin) return false;
+        if (key === "einstellungen" && !appStatus.isAdmin) return false;
+        return true;
+      });
+
+      const desktop = filteredEntries.map(([key, meta]) => `
         <button class="nav-button ${ui.section === key ? "active" : ""}" type="button" data-section="${key}">
           <span class="nav-icon">${meta.icon}</span>
           <span class="nav-label">${escapeHtml(meta.title)}</span>
@@ -2782,6 +2792,11 @@
       document.getElementById("desktopNav").innerHTML = desktop;
       document.getElementById("mobileNav").innerHTML = desktop;
       document.getElementById("sidebar").classList.toggle("collapsed", ui.sidebarCollapsed);
+      
+      const footerActions = document.getElementById("sidebarFooterActions");
+      if (footerActions) {
+        footerActions.style.display = appStatus.user ? "block" : "none";
+      }
     }
 
     function renderTopbar() {
@@ -3915,8 +3930,8 @@
                   </div>
                 </div>
                 <div class="button-row" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
-                  <button class="${selected.approved ? "ghost-button" : "button"}" type="button" data-action="admin-toggle-approval" data-uid="${escapeHtml(selected.uid)}" data-approved="${selected.approved ? 'false' : 'true'}">
-                    ${selected.approved ? "Sperren" : "Genehmigen"}
+                  <button class="${selected.approved ? "danger-button" : "button"}" type="button" data-action="admin-toggle-approval" data-uid="${escapeHtml(selected.uid)}" data-approved="${selected.approved ? 'false' : 'true'}">
+                    ${selected.approved ? "Benutzer löschen (sperren)" : "Genehmigen"}
                   </button>
                 </div>
                 <div class="field" style="margin-top:16px">
@@ -4642,6 +4657,9 @@
         if (!appStatus.isAdmin) return;
         const uid = button.dataset.uid;
         const approved = button.dataset.approved === "true";
+        if (!approved && !window.confirm("Achtung: Dies löscht den Benutzer und alle seine Daten unwiderruflich! Fortfahren?")) {
+          return;
+        }
         button.disabled = true;
         try {
           const token = await getFreshIdToken();

@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { firestore } = await verifyAdminRequest(req);
+    const { auth, firestore } = await verifyAdminRequest(req);
     
     // Parse body manually for Vercel Serverless
     let body;
@@ -27,10 +27,21 @@ module.exports = async (req, res) => {
       return;
     }
 
-    await firestore.collection("approvals").doc(uid).set({
-      approved,
-      updatedAt: new Date().toISOString()
-    }, { merge: true });
+    if (approved) {
+      await firestore.collection("approvals").doc(uid).set({
+        approved,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+    } else {
+      // User is being blocked, so we delete them entirely
+      try {
+        await auth.deleteUser(uid);
+      } catch (err) {
+        // Ignore if already deleted
+      }
+      await firestore.collection("users").doc(uid).delete();
+      await firestore.collection("approvals").doc(uid).delete();
+    }
 
     res.status(200).json({ success: true, approved });
   } catch (error) {

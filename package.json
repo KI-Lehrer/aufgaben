@@ -9,6 +9,7 @@
     "check:api": "node --check api/config.js && node --check api/_lib/firebase-admin.js && node --check api/admin/users.js"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "firebase-admin": "^13.0.0"
   },
   "devDependencies": {
