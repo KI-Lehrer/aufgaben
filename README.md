@@ -18,6 +18,7 @@ Die App läuft ohne Frontend-Buildprozess. Das Frontend steckt in `index.html`. 
 - `api/config.js`: liefert die öffentliche Firebase-Webkonfiguration
 - `api/admin/users.js`: geschützter Admin-Endpunkt
 - `api/_lib/firebase-admin.js`: Firebase-Admin-Helfer für Vercel
+- `local-dev-server.mjs`: lokaler Dev-Server ohne zusätzliche Pakete
 - `firestore.rules`: empfohlene Firestore-Regeln
 - `.env.example`: Vorlage für alle nötigen Umgebungsvariablen
 - `FIREBASE_VERCEL_SETUP.md`: Setup von Firebase und Vercel
@@ -31,7 +32,7 @@ Die App läuft ohne Frontend-Buildprozess. Das Frontend steckt in `index.html`. 
 4. Lokal starten mit:
 
 ```bash
-npm run start
+npm run start:local
 ```
 
 Dann im Browser öffnen:
@@ -47,3 +48,4 @@ Die vollständige Anleitung liegt in [FIREBASE_VERCEL_SETUP.md](/Users/saschalus
 - Die App nutzt lokal weiter `localStorage` als Cache.
 - Die eigentlichen Nutzerdaten werden nach Login in `Cloud Firestore` gespeichert.
 - Der Adminbereich funktioniert erst, wenn `ADMIN_EMAILS` und die `FIREBASE_ADMIN_*` Variablen in Vercel gesetzt sind.
+- Ohne `.env.local` startet die App lokal trotzdem, zeigt aber für Firebase-Konfiguration verständlicherweise einen Hinweis an.
