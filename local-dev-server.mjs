@@ -63,7 +63,12 @@ function contentType(filePath) {
 async function serveFile(res, filePath) {
   try {
     const data = await readFile(filePath);
-    res.writeHead(200, { "Content-Type": contentType(filePath) });
+    res.writeHead(200, {
+      "Content-Type": contentType(filePath),
+      "Cache-Control": "no-store, no-cache, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0"
+    });
     res.end(data);
   } catch {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });

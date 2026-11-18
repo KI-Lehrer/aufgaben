@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="dark">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +46,7 @@
       font-size: 1.25em;
     }
 
-    html[data-theme="light"] {
+    :root {
       --bg: #f2f3fb;
       --bg-elevated: rgba(255, 255, 255, 0.92);
       --surface: #ffffff;
@@ -65,10 +65,6 @@
     }
 
     html {
-      color-scheme: dark;
-    }
-
-    html[data-theme="light"] {
       color-scheme: light;
     }
 
@@ -160,7 +156,83 @@
       backdrop-filter: blur(18px);
       border-right: 1px solid var(--line);
       transition: width var(--transition), padding var(--transition), background var(--transition);
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 99px;
+    }
+
+    html[data-theme="light"] .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(15, 23, 42, 0.12);
+    }
+
+    /* Light-mode: heller Sidebar-Stil passend zum restlichen Design */
+    html[data-theme="light"] .sidebar {
+      background: rgba(255, 255, 255, 0.96);
+      border-right: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 2px 0 18px rgba(71, 85, 105, 0.08);
+    }
+
+    html[data-theme="light"] .sidebar .nav-button {
+      color: #5f6783;
+    }
+
+    html[data-theme="light"] .sidebar .nav-button:hover {
+      background: rgba(116, 86, 201, 0.07);
+      color: #171827;
+      border-color: rgba(116, 86, 201, 0.16);
+    }
+
+    html[data-theme="light"] .sidebar .nav-button.active {
+      background: rgba(116, 86, 201, 0.12);
+      color: #7456c9;
+      border-color: rgba(116, 86, 201, 0.28);
+    }
+
+    html[data-theme="light"] .sidebar .brand-title {
+      color: #171827;
+    }
+
+    html[data-theme="light"] .sidebar .brand-subtitle,
+    html[data-theme="light"] .sidebar .eyebrow {
+      color: #5f6783;
+    }
+
+    html[data-theme="light"] .sidebar .sidebar-footer-copy p {
+      color: #5f6783;
+    }
+
+    html[data-theme="light"] .sidebar .sidebar-footer-card {
+      background: rgba(116, 86, 201, 0.07);
+      border-color: rgba(116, 86, 201, 0.14);
+    }
+
+    html[data-theme="light"] .sidebar .ghost-button {
+      color: #5f6783;
+      border-color: rgba(15, 23, 42, 0.1);
+      background: rgba(15, 23, 42, 0.03);
+    }
+
+    html[data-theme="light"] .sidebar .ghost-button:hover {
+      background: rgba(116, 86, 201, 0.08);
+      border-color: rgba(116, 86, 201, 0.2);
+      color: #7456c9;
+    }
+
+    html[data-theme="light"] .sidebar .icon-button {
+      color: #5f6783;
+      background: rgba(15, 23, 42, 0.04);
     }
 
     .sidebar.collapsed {
@@ -384,6 +456,11 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 10px;
+    }
+
+    /* Topbar Status-Chips ausgeblendet */
+    .topbar-status .soft-chip {
+      display: none;
     }
 
     .view-root {
@@ -961,42 +1038,6 @@
       border-color: rgba(239, 68, 68, 0.24);
     }
 
-    .fab,
-    .print-button {
-      position: fixed;
-      right: 18px;
-      z-index: 40;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 56px;
-      padding: 0 20px;
-      border-radius: 999px;
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .fab {
-      bottom: calc(var(--bottom-nav-height) + 28px);
-      background: linear-gradient(135deg, rgba(124, 92, 191, 0.96), rgba(56, 189, 248, 0.86));
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .print-button {
-      bottom: calc(var(--bottom-nav-height) + 96px);
-      width: 56px;
-      padding: 0;
-      background: rgba(26, 26, 46, 0.86);
-      color: var(--text);
-    }
-
-    html[data-theme="light"] .print-button {
-      background: rgba(255, 255, 255, 0.92);
-    }
-
     .bottom-nav {
       position: fixed;
       left: 0;
@@ -1328,10 +1369,22 @@
       background: transparent;
       border-radius: 0;
       z-index: 1;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity var(--transition), background var(--transition);
+    }
+
+    .slot-button::after {
+      content: "add";
+      font-family: "Material Symbols Outlined";
+      font-size: 1.5rem;
     }
 
     .slot-button:hover {
       background: rgba(124, 92, 191, 0.08);
+      opacity: 1;
     }
 
     .lesson-block {
@@ -1636,13 +1689,7 @@
         display: inline-flex;
       }
 
-      .fab {
-        bottom: 24px;
-      }
 
-      .print-button {
-        bottom: 96px;
-      }
 
       .modal-layer {
         place-items: center;
@@ -1708,12 +1755,1190 @@
         justify-content: space-between;
       }
 
-      .print-button {
-        bottom: calc(var(--bottom-nav-height) + 166px);
+
+
+
+    }
+
+    /* 2026 visual redesign based on mobile template screens */
+    html[data-theme="light"] {
+      --bg: #edf3ff;
+      --bg-elevated: rgba(255, 255, 255, 0.82);
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-strong: rgba(255, 255, 255, 0.98);
+      --surface-soft: rgba(125, 102, 232, 0.08);
+      --line: rgba(112, 119, 146, 0.15);
+      --text: #17182e;
+      --muted: #6f7794;
+      --accent: #7865df;
+      --accent-soft: rgba(120, 101, 223, 0.16);
+      --shadow: 0 16px 38px rgba(107, 122, 177, 0.18);
+      --radius: 28px;
+      --radius-sm: 22px;
+      --page-padding: 20px;
+    }
+
+    html[data-theme="light"] body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(170, 135, 255, 0.22), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(100, 210, 255, 0.24), transparent 34%),
+        linear-gradient(180deg, #fbfcff 0%, #eef4ff 42%, #d9f1ff 100%);
+      color: var(--text);
+    }
+
+    html[data-theme="light"] body::before {
+      top: -100px;
+      right: -80px;
+      width: 420px;
+      height: 280px;
+      background: rgba(160, 138, 255, 0.18);
+      filter: blur(88px);
+      opacity: 0.75;
+    }
+
+    html[data-theme="light"] body::after {
+      bottom: -120px;
+      left: -60px;
+      width: 440px;
+      height: 300px;
+      background: rgba(93, 203, 255, 0.2);
+      filter: blur(92px);
+      opacity: 0.8;
+    }
+
+    html[data-theme="light"] .hero-card,
+    html[data-theme="light"] .card,
+    html[data-theme="light"] .modal-card,
+    html[data-theme="light"] .day-panel,
+    html[data-theme="light"] .calendar-card,
+    html[data-theme="light"] .list-card {
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(111, 119, 148, 0.14);
+      box-shadow: 0 14px 36px rgba(111, 119, 148, 0.14);
+      backdrop-filter: blur(20px);
+    }
+
+    html[data-theme="light"] .main-inner {
+      padding-top: 14px;
+      padding-bottom: calc(var(--bottom-nav-height) + 34px);
+    }
+
+    html[data-theme="light"] .sidebar {
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 0 0 1px rgba(111, 119, 148, 0.08), 18px 0 36px rgba(111, 119, 148, 0.08);
+    }
+
+    html[data-theme="light"] .topbar {
+      padding: 8px 0 10px;
+    }
+
+    html[data-theme="light"] .topbar-brand {
+      display: none;
+    }
+
+    html[data-theme="light"] .topbar-copy .eyebrow {
+      font-size: 0.72rem;
+    }
+
+    html[data-theme="light"] .bottom-nav {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(111, 119, 148, 0.16);
+      box-shadow: 0 18px 32px rgba(111, 119, 148, 0.18);
+      backdrop-filter: blur(24px);
+      padding: 10px 10px calc(12px + env(safe-area-inset-bottom, 0px));
+      gap: 8px;
+    }
+
+    html[data-theme="light"] .bottom-nav .nav-button {
+      min-width: 0;
+      gap: 6px;
+      border-radius: 22px;
+      color: #717792;
+      border: 1px solid transparent;
+      padding: 11px 6px;
+      font-size: 0.8rem;
+    }
+
+    html[data-theme="light"] .bottom-nav .nav-button.active {
+      color: #1a1930;
+      background: linear-gradient(180deg, rgba(236, 230, 255, 0.96), rgba(217, 230, 255, 0.96));
+      border-color: rgba(120, 101, 223, 0.2);
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.6), 0 10px 18px rgba(120, 101, 223, 0.14);
+    }
+
+    html[data-theme="light"] .bottom-nav .nav-label {
+      font-size: 0.72rem;
+      line-height: 1.15;
+      white-space: normal;
+      text-transform: none;
+    }
+
+    .page-shell {
+      display: grid;
+      gap: 20px;
+    }
+
+    .page-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: clamp(2.05rem, 9vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      font-weight: 900;
+    }
+
+    .page-subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .mobile-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 12px 22px rgba(120, 101, 223, 0.12);
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .template-panel {
+      padding: 20px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(111, 119, 148, 0.12);
+      box-shadow: 0 16px 34px rgba(111, 119, 148, 0.14);
+      backdrop-filter: blur(20px);
+    }
+
+    .panel-heading-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-heading-row h2 {
+      margin: 0;
+      font-size: clamp(1.45rem, 5vw, 2rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel-heading-row strong,
+    .panel-heading-row span {
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .panel-kicker {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .welcome-shell {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding: 16px 0 8px;
+      display: grid;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .welcome-mascot {
+      width: 108px;
+      height: 108px;
+      margin: 0 auto;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.95), rgba(225, 233, 255, 0.76));
+      box-shadow: 0 22px 42px rgba(120, 101, 223, 0.16);
+      font-size: 3.4rem;
+    }
+
+    .welcome-headline {
+      margin: 0;
+      font-size: clamp(2.3rem, 8vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.07em;
+      font-weight: 900;
+    }
+
+    .welcome-copy {
+      margin: -8px auto 0;
+      max-width: 18ch;
+      color: var(--text);
+      font-size: 1.1rem;
+      line-height: 1.35;
+    }
+
+    .info-banner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 18px 20px;
+      text-align: left;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(111, 119, 148, 0.12);
+      box-shadow: 0 14px 30px rgba(111, 119, 148, 0.14);
+    }
+
+    .info-banner strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.05rem;
+    }
+
+    .info-banner p {
+      margin: 0;
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .info-banner-icon,
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(240, 242, 255, 0.96), rgba(231, 236, 255, 0.86));
+      color: #27284b;
+      font-size: 1.5rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      padding: 18px;
+      text-align: left;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(111, 119, 148, 0.12);
+      box-shadow: 0 14px 30px rgba(111, 119, 148, 0.14);
+    }
+
+    .feature-card h3 {
+      margin: 18px 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .auth-switcher {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      width: min(100%, 410px);
+      margin: 0 auto;
+      padding: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(120, 101, 223, 0.18);
+      box-shadow: 0 12px 20px rgba(120, 101, 223, 0.14);
+    }
+
+    .auth-switch {
+      min-height: 54px;
+      border-radius: 999px;
+      font-weight: 700;
+      color: #7468a6;
+    }
+
+    .auth-switch.active {
+      background: linear-gradient(135deg, #7d66e8 0%, #9385f2 100%);
+      color: #fff;
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.28), 0 10px 18px rgba(120, 101, 223, 0.22);
+    }
+
+    .welcome-form {
+      display: grid;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .template-input {
+      min-height: 52px;
+      border-radius: 999px;
+      border: 1px solid rgba(111, 119, 148, 0.14);
+      background: rgba(255, 255, 255, 0.92);
+      padding: 0 20px;
+      box-shadow: inset 0 2px 7px rgba(111, 119, 148, 0.06);
+    }
+
+    textarea.template-input,
+    .welcome-form textarea {
+      min-height: 110px;
+      border-radius: 24px;
+      padding: 14px 18px;
+    }
+
+    .template-link-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -4px;
+    }
+
+    .template-link {
+      color: #24284b;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-size: 0.98rem;
+    }
+
+    .template-link.disabled {
+      opacity: 0.78;
+      cursor: default;
+    }
+
+    .welcome-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .template-primary-button,
+    .template-outline-button {
+      min-height: 60px;
+      width: 100%;
+      border-radius: 999px;
+      padding: 0 22px;
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .template-primary-button {
+      color: #fff;
+      background: linear-gradient(135deg, #7c63e6 0%, #816de8 100%);
+      box-shadow: 0 14px 24px rgba(120, 101, 223, 0.24);
+    }
+
+    .template-outline-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #6f6798;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid rgba(120, 101, 223, 0.24);
+      box-shadow: 0 12px 22px rgba(120, 101, 223, 0.12);
+    }
+
+    .google-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: #ea4335;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .next-lesson-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .next-lesson-copy {
+      display: grid;
+      gap: 4px;
+    }
+
+    .next-lesson-copy.solo {
+      grid-column: 1 / -1;
+    }
+
+    .next-lesson-copy strong {
+      font-size: 1.2rem;
+    }
+
+    .next-lesson-copy span {
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .next-lesson-time {
+      font-size: clamp(1.8rem, 7vw, 3rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+    }
+
+    .next-lesson-icon,
+    .next-lesson-visual {
+      width: 92px;
+      height: 92px;
+      border-radius: 28px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .next-lesson-icon {
+      background: rgba(245, 247, 255, 0.92);
+      color: #23253f;
+      border: 1px solid rgba(111, 119, 148, 0.12);
+    }
+
+    .next-lesson-icon .material-symbols-outlined {
+      font-size: 3rem;
+    }
+
+    .next-lesson-visual {
+      color: #fff;
+      box-shadow: inset -8px -8px 0 rgba(255, 70, 140, 0.18);
+    }
+
+    .next-lesson-visual .material-symbols-outlined {
+      font-size: 3.2rem;
+    }
+
+    .tracker-progress {
+      width: 100%;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(117, 128, 171, 0.14);
+      overflow: hidden;
+    }
+
+    .tracker-progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #35aef2 0%, #5cc9ff 100%);
+    }
+
+    .tracker-footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .page-section {
+      display: grid;
+      gap: 14px;
+    }
+
+    .week-highlight-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .week-highlight-card {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .week-highlight-label {
+      color: #7269a2;
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .week-highlight-card strong {
+      font-size: clamp(1.6rem, 5vw, 2.3rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .week-highlight-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .schedule-template-panel {
+      display: grid;
+      gap: 18px;
+    }
+
+    .schedule-action-button,
+    .exam-add-button {
+      min-height: 46px;
+      width: auto;
+      padding: 0 18px;
+      font-size: 0.94rem;
+    }
+
+    .schedule-strip {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(168px, 1fr);
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .schedule-subject-card {
+      min-height: 216px;
+      border-radius: 28px;
+      padding: 22px;
+      text-align: left;
+      color: #10111f;
+      background: var(--subject-gradient);
+      box-shadow: 0 18px 30px var(--subject-glow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .schedule-subject-card strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+      line-height: 1.02;
+    }
+
+    .schedule-subject-card span,
+    .schedule-subject-card small {
+      display: block;
+      color: rgba(16, 17, 31, 0.86);
+      font-size: 0.95rem;
+    }
+
+    .schedule-subject-card small {
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .subject-corner-icon {
+      align-self: flex-end;
+      font-size: 3rem !important;
+      color: rgba(16, 17, 31, 0.88);
+    }
+
+    .homework-today-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .homework-today-row {
+      display: flex;
+      gap: 8px;
+      text-align: left;
+      padding: 0;
+    }
+
+    .homework-today-row strong {
+      flex-shrink: 0;
+    }
+
+    .lesson-block-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .lesson-block-head .material-symbols-outlined {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .schedule-empty-state {
+      margin-top: 4px;
+    }
+
+    .homework-template-screen {
+      gap: 18px;
+    }
+
+    .template-mini-action {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(120, 101, 223, 0.18);
+      box-shadow: 0 12px 20px rgba(120, 101, 223, 0.12);
+    }
+
+    .status-pill-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(235, 229, 255, 0.95), rgba(235, 245, 255, 0.82));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .status-pill {
+      min-height: 56px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #2a2842;
+    }
+
+    .status-pill.active {
+      color: #fff;
+      background: linear-gradient(135deg, #7a62e5 0%, #8b78ef 100%);
+      box-shadow: 0 10px 18px rgba(120, 101, 223, 0.22);
+    }
+
+    .subject-filter-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .subject-filter-chip {
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(111, 119, 148, 0.14);
+      color: #2e3045;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .subject-filter-chip.active {
+      background: rgba(120, 101, 223, 0.14);
+      color: #493c98;
+      border-color: rgba(120, 101, 223, 0.24);
+    }
+
+    .homework-section-block {
+      display: grid;
+      gap: 14px;
+    }
+
+    .homework-template-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .homework-template-card {
+      padding: 12px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, var(--card-gradient), rgba(255, 255, 255, 0.82));
+      box-shadow: 0 18px 34px var(--card-glow);
+      overflow: hidden;
+    }
+
+    .homework-template-card.done {
+      filter: saturate(0.9);
+    }
+
+    .homework-template-main {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .homework-template-summary {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .homework-icon-box {
+      width: 86px;
+      height: 86px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.24);
+    }
+
+    .homework-icon-box .material-symbols-outlined {
+      font-size: 2.5rem;
+    }
+
+    .homework-card-body {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+      color: #181a30;
+    }
+
+    .homework-card-body strong {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .homework-card-body h4 {
+      margin: 0;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      line-height: 1.1;
+    }
+
+    .homework-card-body p {
+      margin: 0;
+      color: rgba(24, 26, 48, 0.72);
+      font-size: 0.95rem;
+    }
+
+    .homework-toggle-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.76);
+      border: 5px solid #7b63e6;
+      box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.5);
+      display: grid;
+      place-items: center;
+      color: #7b63e6;
+      flex-shrink: 0;
+    }
+
+    .homework-toggle-circle.done {
+      background: rgba(123, 99, 230, 0.88);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .homework-toggle-circle .material-symbols-outlined {
+      font-size: 2rem;
+      font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .homework-template-details {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--text);
+    }
+
+    .template-detail-card {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(111, 119, 148, 0.12);
+    }
+
+    .template-detail-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .template-detail-card p {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .empty-template-panel {
+      display: grid;
+      gap: 6px;
+    }
+
+    .empty-template-panel strong {
+      font-size: 1.05rem;
+    }
+
+    .empty-template-panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .template-detail-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .exam-hero-panel,
+    .exam-template-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .exam-hero-card,
+    .exam-template-card {
+      border-radius: 34px;
+      background: linear-gradient(135deg, var(--card-gradient), rgba(255, 255, 255, 0.8));
+      box-shadow: 0 18px 34px var(--card-glow);
+      overflow: hidden;
+    }
+
+    .exam-hero-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .exam-hero-copy {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+      color: #181a30;
+      min-width: 0;
+    }
+
+    .exam-hero-copy h3,
+    .exam-template-copy h3 {
+      margin: 4px 0;
+      font-size: clamp(1.25rem, 4vw, 1.8rem);
+      line-height: 1.08;
+    }
+
+    .exam-hero-copy p,
+    .exam-template-copy p,
+    .exam-template-copy span {
+      margin: 0;
+      color: rgba(24, 26, 48, 0.74);
+    }
+
+    .exam-hero-copy strong {
+      font-size: 1.05rem;
+    }
+
+    .countdown-bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      color: #4a3d96;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(81, 73, 134, 0.14);
+      white-space: nowrap;
+    }
+
+    .countdown-bubble.small {
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.88rem;
+    }
+
+    .exam-template-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 14px;
+    }
+
+    .exam-template-summary {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .exam-template-copy {
+      display: grid;
+      gap: 6px;
+      color: #181a30;
+      min-width: 0;
+    }
+
+    .exam-template-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .exam-inline-actions {
+      align-self: center;
+      padding-right: 6px;
+    }
+
+    .exam-template-details {
+      display: grid;
+      gap: 14px;
+      margin: 0 14px 14px;
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--text);
+    }
+
+    .exam-icon-box {
+      width: 74px;
+      height: 74px;
+    }
+
+    .topics-cloud .tag {
+      background: rgba(242, 245, 255, 0.92);
+    }
+
+    .calendar-highlight-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .calendar-toolbar-panel {
+      display: grid;
+      gap: 16px;
+    }
+
+    .template-toolbar h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      letter-spacing: -0.05em;
+    }
+
+    .calendar-nav-buttons {
+      flex-wrap: wrap;
+    }
+
+    .template-calendar-card {
+      padding: 18px;
+      border-radius: 30px;
+    }
+
+    .calendar-day {
+      min-height: 132px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(111, 119, 148, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .calendar-day.selected {
+      background: linear-gradient(180deg, rgba(236, 230, 255, 0.96), rgba(217, 230, 255, 0.94));
+      box-shadow: 0 12px 22px rgba(120, 101, 223, 0.14);
+    }
+
+    .calendar-day.today {
+      border-color: rgba(120, 101, 223, 0.36);
+    }
+
+    .settings-summary-panel,
+    .settings-template-card {
+      display: grid;
+      gap: 16px;
+    }
+
+    .settings-summary-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .settings-summary-item {
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: rgba(245, 247, 255, 0.82);
+      border: 1px solid rgba(111, 119, 148, 0.1);
+    }
+
+    .settings-summary-item span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .settings-summary-item strong {
+      display: block;
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+
+    .admin-toolbar-panel,
+    .admin-bulk-actions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .admin-filter-bar {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-select-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .admin-select-all input,
+    .admin-user-checkbox input {
+      width: 18px;
+      height: 18px;
+      accent-color: #7456c9;
+    }
+
+    .admin-bulk-button {
+      min-height: 54px;
+      width: auto;
+      justify-self: start;
+      padding-inline: 22px;
+    }
+
+    .admin-user-list {
+      gap: 12px;
+    }
+
+    .admin-user-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .admin-user-item.selected {
+      border-color: rgba(116, 86, 201, 0.24);
+      box-shadow: inset 0 0 0 1px rgba(116, 86, 201, 0.15);
+    }
+
+    .admin-user-button {
+      min-width: 0;
+      text-align: left;
+    }
+
+    .admin-user-button p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .admin-user-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .admin-inline-approve {
+      min-height: 42px;
+      padding: 0 16px;
+      white-space: nowrap;
+    }
+
+    .template-list-tight .mini-item {
+      background: rgba(247, 249, 255, 0.92);
+      border: 1px solid rgba(111, 119, 148, 0.1);
+    }
+
+    @media (max-width: 767px) {
+      .topbar {
+        display: none;
       }
 
-      .fab {
-        max-width: calc(100vw - 36px);
+      .main-inner {
+        padding-top: 22px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .next-lesson-card {
+        grid-template-columns: 1fr;
+      }
+
+      .next-lesson-icon,
+      .next-lesson-visual {
+        width: 84px;
+        height: 84px;
+      }
+
+      .schedule-strip {
+        grid-auto-columns: minmax(210px, 1fr);
+      }
+
+      .calendar-highlight-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-user-item {
+        grid-template-columns: auto 1fr;
+      }
+
+      .admin-user-actions {
+        grid-column: 1 / -1;
+        justify-self: end;
+      }
+
+      .exam-hero-card,
+      .exam-template-top {
+        grid-template-columns: 1fr;
+      }
+
+      .exam-hero-card {
+        display: grid;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .page-shell {
+        gap: 24px;
+      }
+
+      .welcome-shell {
+        width: min(100%, 920px);
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 720px);
+        margin: 0 auto;
+      }
+
+      .welcome-form,
+      .auth-switcher,
+      .google-button,
+      .info-banner {
+        width: min(100%, 560px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .week-highlight-grid,
+      .settings-summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -1743,8 +2968,6 @@
       body::after,
       .sidebar,
       .bottom-nav,
-      .fab,
-      .print-button,
       .toast-stack,
       .modal-layer,
       .icon-button,
@@ -1811,7 +3034,65 @@
         break-inside: avoid;
       }
     }
-  </style>
+      /* ---------- Demo-Zugang ---------- */
+    .demo-entry {
+      width: 100%;
+      max-width: 560px;
+      margin: 18px auto 0;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      text-align: center;
+    }
+    .demo-entry-or {
+      font-size: 0.82rem;
+      color: var(--muted, #6b7280);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .demo-entry-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 20px;
+      border: 2px dashed #f59e0b;
+      border-radius: 16px;
+      background: #fff7e6;
+      color: #92400e;
+      font: inherit;
+      font-weight: 700;
+      font-size: 1.02rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .demo-entry-button:hover { background: #ffedc7; transform: translateY(-1px); }
+    .demo-entry-button:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+    .demo-entry-note { margin: 0; font-size: 0.85rem; color: var(--muted, #6b7280); }
+    .demo-ribbon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 0 16px;
+      padding: 10px 14px;
+      border: 2px dashed #f59e0b;
+      border-radius: 14px;
+      background: #fff7e6;
+      color: #92400e;
+      font-size: 0.9rem;
+    }
+    .demo-ribbon strong { background: #f59e0b; color: #fff; border-radius: 999px; padding: 2px 10px; font-size: 0.75rem; letter-spacing: 0.06em; }
+    .demo-ribbon span { flex: 1; min-width: 180px; }
+    .demo-ribbon button {
+      border: 1px solid #f59e0b; background: #fff; color: #92400e; border-radius: 10px;
+      padding: 6px 12px; font: inherit; font-weight: 600; cursor: pointer;
+    }
+    .demo-ribbon button:hover { background: #ffedc7; }
+    @media print { .demo-ribbon { display: none !important; } }
+</style>
 </head>
 <body>
   <div class="app-shell">
@@ -1836,10 +3117,6 @@
           </div>
         </div>
         <div class="sidebar-footer-actions" id="sidebarFooterActions">
-          <button class="ghost-button" style="width: 100%; margin-top: 12px; color: var(--text-secondary);" type="button" data-action="toggle-theme">
-            <span class="nav-icon material-symbols-outlined">contrast</span>
-            <span>Design wechseln</span>
-          </button>
           <button class="ghost-button" style="width: 100%; margin-top: 8px; color: var(--text-secondary);" type="button" data-action="sign-out">
             <span class="nav-icon material-symbols-outlined">logout</span>
             <span>Abmelden</span>
@@ -1869,8 +3146,7 @@
   </div>
 
   <nav class="bottom-nav" id="mobileNav"></nav>
-  <button class="fab hidden" id="fabButton" type="button"></button>
-  <button class="print-button" type="button" data-action="print" aria-label="Aktuelle Ansicht drucken">📄</button>
+
 
   <div class="modal-layer hidden" id="modalLayer">
     <div class="modal-backdrop" data-action="close-modal"></div>
@@ -1902,6 +3178,16 @@
     } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
     const STORAGE_KEY = "hausaufgaben-app-state-v1";
+    const DEMO_STORAGE_KEY = "stop-and-learn-demo-v1";
+    let demoStorageActive = false;
+    const DEMO_REQUESTED = /(?:[?&]demo\b|#demo\b)/i.test(window.location.search + window.location.hash);
+    const DEMO_EMAIL = "max@muster.ch";
+    const DEMO_PASSWORD = "Muster";
+    const DEMO_USER = {
+      uid: "demo-max-muster",
+      email: DEMO_EMAIL,
+      displayName: "Max Muster"
+    };
     const WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr"];
     const CALENDAR_WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
     const DAY_NAMES = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
@@ -1964,6 +3250,9 @@
       homeworkFilterSubject: "all",
       homeworkFilterStatus: "alle",
       adminSelectedUid: "",
+      adminFilterStatus: "pending",
+      selectedAdminUids: new Set(),
+      subjectLessonDrafts: {},
       expandedHomework: new Set(),
       expandedExams: new Set()
     };
@@ -1973,6 +3262,7 @@
     const appStatus = {
       mode: "booting",
       user: null,
+      demoMode: false,
       isAdmin: false,
       auth: null,
       db: null,
@@ -2006,7 +3296,11 @@
     }
 
     function formatISODate(date) {
-      return startOfDay(date).toISOString().slice(0, 10);
+      const localDate = startOfDay(date);
+      const year = localDate.getFullYear();
+      const month = String(localDate.getMonth() + 1).padStart(2, "0");
+      const day = String(localDate.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
     }
 
     function parseISODate(value) {
@@ -2208,10 +3502,22 @@
         drafts: {},
         settings: {
           klasse: "2B",
-          darkMode: "auto",
           erinnerungen: true
         }
       };
+    }
+
+    function createFreshUserState(user = null) {
+      const base = createSampleState();
+      const accountName = String(user?.displayName || "").trim();
+      const accountMailName = String(user?.email || "").split("@")[0] || "";
+      return normalizeState({
+        ...base,
+        settings: {
+          ...base.settings,
+          name: accountName || accountMailName || ""
+        }
+      });
     }
 
     function normalizeState(candidate) {
@@ -2256,7 +3562,23 @@
     }
 
     function persistLocalCache(nextState = state) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+      try {
+        localStorage.setItem(demoStorageActive ? DEMO_STORAGE_KEY : STORAGE_KEY, JSON.stringify(nextState));
+      } catch (error) {
+        console.warn("Lokaler Speicher nicht verfügbar", error);
+      }
+    }
+
+    function loadDemoState() {
+      try {
+        const raw = localStorage.getItem(DEMO_STORAGE_KEY);
+        if (raw) {
+          return normalizeState(JSON.parse(raw));
+        }
+      } catch (error) {
+        console.warn("Demo-Daten konnten nicht gelesen werden", error);
+      }
+      return createFreshUserState(DEMO_USER);
     }
 
     function loadState() {
@@ -2294,6 +3616,9 @@
     }
 
     function syncStatusLabel() {
+      if (appStatus.demoMode) {
+        return "Demo aktiv";
+      }
       if (appStatus.mode === "signed_out") {
         return "Nicht angemeldet";
       }
@@ -2310,6 +3635,28 @@
         return "Cloud aktiv";
       }
       return "Lokal zwischengespeichert";
+    }
+
+    function sortedAdminUsers() {
+      return [...appStatus.adminUsers].sort((a, b) => {
+        if (a.approved !== b.approved) {
+          return a.approved ? 1 : -1;
+        }
+        const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bTime - aTime;
+      });
+    }
+
+    function visibleAdminUsers() {
+      const users = sortedAdminUsers();
+      if (ui.adminFilterStatus === "pending") {
+        return users.filter((user) => !user.approved);
+      }
+      if (ui.adminFilterStatus === "approved") {
+        return users.filter((user) => user.approved);
+      }
+      return users;
     }
 
     function mapAuthError(error) {
@@ -2444,6 +3791,8 @@
 
     async function hydrateUserState(user) {
       stopRemoteSubscription();
+      appStatus.demoMode = false;
+      demoStorageActive = false;
       appStatus.user = user;
       appStatus.mode = "syncing";
       appStatus.syncState = "saving";
@@ -2471,9 +3820,12 @@
 
       if (snapshot.exists() && snapshot.data()?.state) {
         state = normalizeState(snapshot.data().state);
+        if (!state.settings.name?.trim()) {
+          state.settings.name = user.displayName?.trim() || user.email?.split("@")[0] || "";
+        }
         persistLocalCache(state);
       } else {
-        state = normalizeState(loadState());
+        state = createFreshUserState(user);
         persistLocalCache(state);
         await pushStateToCloud(state);
       }
@@ -2515,6 +3867,7 @@
         appStatus.isAdmin = false;
         appStatus.adminUsers = [];
         appStatus.adminDetail = null;
+        ui.selectedAdminUids.clear();
         if (ui.section === "admin") {
           ui.section = "dashboard";
         }
@@ -2526,6 +3879,9 @@
         const payload = await fetchAdminJson("/api/admin/users");
         appStatus.isAdmin = true;
         appStatus.adminUsers = Array.isArray(payload.users) ? payload.users : [];
+        ui.selectedAdminUids = new Set(
+          [...ui.selectedAdminUids].filter((uid) => appStatus.adminUsers.some((user) => user.uid === uid))
+        );
         if (!ui.adminSelectedUid && appStatus.adminUsers[0]?.uid) {
           ui.adminSelectedUid = appStatus.adminUsers[0].uid;
         }
@@ -2572,9 +3928,13 @@
 
         onAuthStateChanged(appStatus.auth, async (user) => {
           window.clearTimeout(appStatus.saveTimer);
+          if (appStatus.demoMode) {
+            return;
+          }
           if (!user) {
             stopRemoteSubscription();
             appStatus.user = null;
+            appStatus.demoMode = false;
             appStatus.isAdmin = false;
             appStatus.adminUsers = [];
             appStatus.adminDetail = null;
@@ -2655,15 +4015,43 @@
       }
     }
 
+    function startDemo(options = {}) {
+      const { fresh = false } = options;
+      stopRemoteSubscription();
+      window.clearTimeout(appStatus.saveTimer);
+      appStatus.demoMode = true;
+      demoStorageActive = true;
+      appStatus.user = { ...DEMO_USER };
+      appStatus.isAdmin = false;
+      appStatus.adminUsers = [];
+      appStatus.adminDetail = null;
+      ui.adminSelectedUid = "";
+      if (ui.section === "admin") {
+        ui.section = "dashboard";
+      }
+      state = fresh ? createFreshUserState(DEMO_USER) : loadDemoState();
+      persistLocalCache(state);
+      appStatus.mode = "ready";
+      appStatus.syncState = "offline";
+      renderNav();
+      renderApp();
+      showToast(fresh ? "Demo zurückgesetzt" : "Demo geöffnet – viel Spass beim Ausprobieren!");
+    }
+
     async function signInWithEmail(form) {
+      const data = Object.fromEntries(new FormData(form).entries());
+      const email = String(data.email || "").trim();
+      const password = String(data.password || "");
+
+      if (email.toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
+        startDemo();
+        return;
+      }
+
       if (!appStatus.auth) {
         showToast("Firebase ist noch nicht bereit");
         return;
       }
-
-      const data = Object.fromEntries(new FormData(form).entries());
-      const email = String(data.email || "").trim();
-      const password = String(data.password || "");
 
       if (!email || !password) {
         showToast("Bitte E-Mail und Passwort eingeben");
@@ -2679,6 +4067,38 @@
     }
 
     async function logOut() {
+      if (appStatus.demoMode) {
+        stopRemoteSubscription();
+        appStatus.demoMode = false;
+        demoStorageActive = false;
+        if (DEMO_REQUESTED) {
+          try { history.replaceState(null, "", window.location.pathname); } catch (error) {}
+        }
+        if (appStatus.auth?.currentUser) {
+          appStatus.user = null;
+          state = loadState();
+          showToast("Demo beendet");
+          try {
+            await hydrateUserState(appStatus.auth.currentUser);
+          } catch (error) {
+            console.error(error);
+            appStatus.mode = "signed_out";
+            renderApp();
+          }
+          return;
+        }
+        appStatus.user = null;
+        appStatus.isAdmin = false;
+        appStatus.adminUsers = [];
+        appStatus.adminDetail = null;
+        ui.adminSelectedUid = "";
+        appStatus.mode = "signed_out";
+        appStatus.syncState = "offline";
+        state = loadState();
+        renderApp();
+        return;
+      }
+
       if (!appStatus.auth) {
         return;
       }
@@ -2698,26 +4118,17 @@
     function saveState(options = {}) {
       const { silent = false, message = "Gespeichert ✓" } = options;
       persistLocalCache(state);
-      scheduleRemoteSave();
+      if (!appStatus.demoMode) {
+        scheduleRemoteSave();
+      }
       if (!silent) {
         showToast(message);
       }
     }
 
     function applyTheme() {
-      let theme = state.settings.darkMode;
-      if (theme !== "light" && theme !== "dark") {
-        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.setAttribute("data-theme", "light");
     }
-
-    // Höre auf System-Wechsel, wenn auf Auto
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-      if (state.settings.darkMode !== "light" && state.settings.darkMode !== "dark") {
-        applyTheme();
-      }
-    });
 
     function getSubject(subjectId) {
       return state.subjects.find((subject) => subject.id === subjectId) || null;
@@ -2784,6 +4195,123 @@
       return `<span class="status-badge ${isDone ? "done" : "open"}">${isDone ? "erledigt" : "offen"}</span>`;
     }
 
+    function primaryDisplayName() {
+      const rawName = appStatus.user?.displayName?.trim()
+        || state.settings.name?.trim()
+        || appStatus.user?.email?.split("@")[0]
+        || "du";
+      return rawName.split(/\s+/)[0];
+    }
+
+    function timeToMinutes(time) {
+      const [hour, minute] = String(time || "00:00").split(":").map(Number);
+      return hour * 60 + minute;
+    }
+
+    function subjectVisual(subjectId) {
+      const subject = getSubject(subjectId);
+      const name = (subject?.name || "Allgemein").toLowerCase();
+      const base = {
+        icon: "menu_book",
+        gradient: "linear-gradient(135deg, #8b7cff 0%, #6bd8ff 100%)",
+        cardTint: "rgba(255,255,255,0.22)",
+        iconTint: "rgba(255,255,255,0.22)",
+        glow: "rgba(125, 102, 232, 0.24)"
+      };
+
+      if (name.includes("mathe")) {
+        return {
+          icon: "calculate",
+          gradient: "linear-gradient(135deg, #1d9bf0 0%, #72d1ff 100%)",
+          cardTint: "rgba(0, 102, 255, 0.18)",
+          iconTint: "rgba(255,255,255,0.22)",
+          glow: "rgba(29, 155, 240, 0.28)"
+        };
+      }
+
+      if (name.includes("deutsch")) {
+        return {
+          icon: "auto_stories",
+          gradient: "linear-gradient(135deg, #ff4f88 0%, #ff8f7b 100%)",
+          cardTint: "rgba(255, 79, 136, 0.16)",
+          iconTint: "rgba(255,255,255,0.22)",
+          glow: "rgba(255, 79, 136, 0.26)"
+        };
+      }
+
+      if (name.includes("englisch") || name.includes("franz")) {
+        return {
+          icon: "translate",
+          gradient: "linear-gradient(135deg, #44c86e 0%, #84f0b2 100%)",
+          cardTint: "rgba(68, 200, 110, 0.18)",
+          iconTint: "rgba(255,255,255,0.22)",
+          glow: "rgba(68, 200, 110, 0.24)"
+        };
+      }
+
+      if (name.includes("geo")) {
+        return {
+          icon: "public",
+          gradient: "linear-gradient(135deg, #ffb100 0%, #ffd37a 100%)",
+          cardTint: "rgba(255, 177, 0, 0.18)",
+          iconTint: "rgba(255,255,255,0.24)",
+          glow: "rgba(255, 177, 0, 0.28)"
+        };
+      }
+
+      if (name.includes("bio") || name.includes("natur")) {
+        return {
+          icon: "science",
+          gradient: "linear-gradient(135deg, #35d98c 0%, #79f0d8 100%)",
+          cardTint: "rgba(53, 217, 140, 0.18)",
+          iconTint: "rgba(255,255,255,0.24)",
+          glow: "rgba(53, 217, 140, 0.24)"
+        };
+      }
+
+      return base;
+    }
+
+    function nextLessonInfo() {
+      const todayWeekday = weekdayForDate(new Date());
+      const lessons = getLessonsForWeekday(todayWeekday);
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const upcoming = lessons.find((lesson) => timeToMinutes(lesson.endTime) >= currentMinutes);
+      if (upcoming) {
+        return {
+          lesson: upcoming,
+          subject: getSubject(upcoming.fachId),
+          isLive: currentMinutes >= timeToMinutes(upcoming.startTime)
+        };
+      }
+      return {
+        lesson: null,
+        subject: null,
+        isLive: false
+      };
+    }
+
+    function homeworkProgress() {
+      const total = state.homework.length;
+      const done = state.homework.filter((item) => item.status === "erledigt").length;
+      const open = total - done;
+      return {
+        total,
+        done,
+        open,
+        percent: total ? Math.round((done / total) * 100) : 0
+      };
+    }
+
+    function homeworkDueToday() {
+      const today = todayIso();
+      return sortByDate(
+        state.homework.filter((item) => item.status === "offen" && item.dueDate <= today),
+        "dueDate"
+      );
+    }
+
     function getDashboardData() {
       const today = todayIso();
       const todayWeekday = weekdayForDate(today);
@@ -2835,38 +4363,47 @@
           ? "Melde dich an oder registriere dich, damit dieselben Daten auf all deinen Geräten erscheinen."
           : appStatus.configError || "Die App verbindet sich mit deiner Cloud-Datenbank.";
         document.getElementById("topbarStatus").innerHTML = `
-          <span class="soft-chip">${escapeHtml(syncStatusLabel())}</span>
+          ${appStatus.user ? `
+            <button class="icon-button" type="button" data-action="sign-out" title="Abmelden">
+              <span class="material-symbols-outlined">logout</span>
+            </button>
+          ` : ""}
         `;
         return;
       }
 
       const meta = SECTION_META[ui.section];
-      const { dueHomework, weekExams, todayLessons } = getDashboardData();
       document.getElementById("topbarEyebrow").textContent = meta.eyebrow;
       document.getElementById("topbarTitle").textContent = meta.title;
       document.getElementById("topbarSubtitle").textContent = meta.subtitle;
       document.getElementById("topbarStatus").innerHTML = `
-        <span class="soft-chip">${escapeHtml(syncStatusLabel())}</span>
-        <span class="soft-chip">Heute <strong>${todayLessons.length}</strong> Lektionen</span>
-        <span class="soft-chip"><strong>${state.homework.filter((item) => item.status === "offen").length}</strong> offene Aufgaben</span>
-        <span class="soft-chip"><strong>${weekExams.length}</strong> Prüfungen diese Woche</span>
+        <button class="icon-button" type="button" data-action="sign-out" title="Abmelden">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
       `;
     }
 
     function renderAuthView() {
       if (appStatus.mode === "config_error") {
         return `
-          <section class="hero-card">
-            <p class="eyebrow">Setup</p>
-            <h3 class="hero-headline">Firebase muss zuerst konfiguriert werden.</h3>
-            <p class="hero-description">${escapeHtml(appStatus.configError || "Die Konfiguration aus /api/config fehlt noch.")}</p>
-          </section>
-
-          <section class="card">
-            <div class="empty-state">
-              <span class="empty-icon">🛠</span>
-              <h3>Vercel-Umgebungsvariablen setzen</h3>
-              <p>Lege in Vercel die Firebase-Werte an und deploye erneut. Die genauen Namen stehen in der Setup-Datei dieses Projekts.</p>
+          <section class="welcome-shell">
+            <div class="welcome-mascot">🛠️</div>
+            <h1 class="welcome-headline">Firebase fehlt noch</h1>
+            <p class="welcome-copy">${escapeHtml(appStatus.configError || "Die Konfiguration aus /api/config fehlt noch.")}</p>
+            <div class="info-banner">
+              <span class="info-banner-icon material-symbols-outlined">cloud_off</span>
+              <div>
+                <strong>Setup notwendig</strong>
+                <p>Lege in Vercel die Firebase-Werte an und deploye erneut.</p>
+              </div>
+            </div>
+            <div class="demo-entry">
+              <span class="demo-entry-or">oder</span>
+              <button class="demo-entry-button" type="button" data-action="start-demo">
+                <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+                <span>Demo ansehen</span>
+              </button>
+              <p class="demo-entry-note">Ohne Anmeldung, mit erfundenen Beispieldaten. Deine Änderungen bleiben nur in diesem Browser.</p>
             </div>
           </section>
         `;
@@ -2874,238 +4411,237 @@
 
       if (appStatus.mode === "booting" || appStatus.mode === "syncing") {
         return `
-          <section class="hero-card">
-            <p class="eyebrow">Cloud</p>
-            <h3 class="hero-headline">Deine Datenbank wird verbunden.</h3>
-            <p class="hero-description">Einen Moment bitte. Sobald Firebase bereit ist, werden deine Daten geladen und live zwischen deinen Geräten synchronisiert.</p>
+          <section class="welcome-shell">
+            <div class="welcome-mascot">🦉</div>
+            <h1 class="welcome-headline">Willkommen & Login</h1>
+            <p class="welcome-copy">Deine Datenbank wird verbunden. Einen Moment bitte.</p>
+            <div class="info-banner">
+              <span class="info-banner-icon material-symbols-outlined">cloud_sync</span>
+              <div>
+                <strong>Cloud-Synchronisierung</strong>
+                <p>Sobald Firebase bereit ist, werden deine Daten automatisch geladen.</p>
+              </div>
+            </div>
+            <div class="demo-entry">
+              <span class="demo-entry-or">oder</span>
+              <button class="demo-entry-button" type="button" data-action="start-demo">
+                <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+                <span>Demo ansehen</span>
+              </button>
+              <p class="demo-entry-note">Ohne Anmeldung, mit erfundenen Beispieldaten. Deine Änderungen bleiben nur in diesem Browser.</p>
+            </div>
           </section>
         `;
       }
 
       if (appStatus.mode === "pending_approval") {
         return `
-          <section class="hero-card">
-            <p class="eyebrow">Warten auf Freigabe</p>
-            <h3 class="hero-headline">Konto wird überprüft</h3>
-            <p class="hero-description">Dein Konto wurde erfolgreich erstellt, muss aber noch von einem Administrator freigeschaltet werden. Sobald dies passiert ist, erhältst du automatisch Zugriff.</p>
-            <div class="button-row" style="margin-top:24px">
-              <button class="ghost-button" type="button" data-action="log-out">Abmelden</button>
+          <section class="welcome-shell">
+            <div class="welcome-mascot">⏳</div>
+            <h1 class="welcome-headline">Konto wird geprüft</h1>
+            <p class="welcome-copy">Dein Zugang wurde erstellt und wartet jetzt noch auf die Freigabe durch die Lehrperson oder Administration.</p>
+            <div class="info-banner">
+              <span class="info-banner-icon material-symbols-outlined">verified_user</span>
+              <div>
+                <strong>Freigabe ausstehend</strong>
+                <p>Sobald dein Konto bestätigt ist, erhältst du automatisch Zugriff.</p>
+              </div>
+            </div>
+            <div class="welcome-actions">
+              <button class="template-outline-button" type="button" data-action="log-out">Abmelden</button>
             </div>
           </section>
         `;
       }
 
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Synchronisierung</p>
-          <h3 class="hero-headline">Registrieren oder anmelden und direkt weitermachen.</h3>
-          <p class="hero-description">Dein Konto speichert Hausaufgaben, Prüfungen, Stundenplan und Einstellungen zentral in Firestore. So kannst du alles auf jedem deiner Geräte ansehen und bearbeiten.</p>
-        </section>
+        <section class="welcome-shell">
+          <div class="welcome-mascot">🦉</div>
+          <h1 class="welcome-headline">Willkommen & Login</h1>
+          <p class="welcome-copy">Dein Schulbegleiter für Hausaufgaben & Stundenplan.</p>
 
-        <section class="content-grid two-col">
-          <article class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Zugang</h3>
-                <p class="card-subtitle">Wähle zwischen Login und neuer Registrierung.</p>
+          <div class="info-banner">
+            <span class="info-banner-icon material-symbols-outlined">cloud</span>
+            <div>
+              <strong>Cloud-Synchronisierung</strong>
+              <p>Alles automatisch auf all deinen Geräten.</p>
+            </div>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span class="feature-icon material-symbols-outlined">school</span>
+              <h3>Hausaufgaben</h3>
+              <p>Behalte den Überblick über Aufgaben und Fristen.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon material-symbols-outlined">calendar_month</span>
+              <h3>Stundenplan</h3>
+              <p>Kenne immer deinen nächsten Unterricht.</p>
+            </article>
+          </div>
+
+          <div class="auth-switcher">
+            <button class="auth-switch ${ui.authMode === "signin" ? "active" : ""}" type="button" data-action="set-auth-mode" data-auth-mode="signin">Anmelden</button>
+            <button class="auth-switch ${ui.authMode === "signup" ? "active" : ""}" type="button" data-action="set-auth-mode" data-auth-mode="signup">Registrieren</button>
+          </div>
+
+          ${ui.authMode === "signup" ? `
+            <form class="welcome-form" data-form="auth-signup">
+              <div class="field">
+                <label for="signup-name">Name</label>
+                <input class="template-input" id="signup-name" type="text" name="name" required placeholder="Dein Name">
               </div>
-            </div>
-            <div class="toolbar-group">
-              <button class="${ui.authMode === "signin" ? "button" : "ghost-button"}" type="button" data-action="set-auth-mode" data-auth-mode="signin">Anmelden</button>
-              <button class="${ui.authMode === "signup" ? "button" : "ghost-button"}" type="button" data-action="set-auth-mode" data-auth-mode="signup">Registrieren</button>
-            </div>
-
-            ${ui.authMode === "signup" ? `
-              <form class="form-grid" data-form="auth-signup">
-                <div class="field">
-                  <label for="signup-name">Name</label>
-                  <input id="signup-name" type="text" name="name" required placeholder="Dein Name">
-                </div>
-                <div class="field">
-                  <label for="signup-email">E-Mail-Adresse</label>
-                  <input id="signup-email" type="email" name="email" required placeholder="name@beispiel.ch">
-                </div>
-                <div class="field">
-                  <label for="signup-password">Passwort</label>
-                  <input id="signup-password" type="password" name="password" required minlength="6" placeholder="Mindestens 6 Zeichen">
-                </div>
-                <div class="button-row">
-                  <button class="button" type="submit">Konto erstellen</button>
-                </div>
-              </form>
-            ` : `
-              <form class="form-grid" data-form="auth-signin">
-                <div class="field">
-                  <label for="signin-email">E-Mail-Adresse</label>
-                  <input id="signin-email" type="email" name="email" required placeholder="name@beispiel.ch">
-                </div>
-                <div class="field">
-                  <label for="signin-password">Passwort</label>
-                  <input id="signin-password" type="password" name="password" required placeholder="Dein Passwort">
-                </div>
-                <div class="button-row">
-                  <button class="button" type="submit">Anmelden</button>
-                </div>
-              </form>
-            `}
-
-            <div class="button-row" style="margin-top:16px">
-              <button class="ghost-button" type="button" data-action="sign-in-google">Mit Google anmelden</button>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Was gespeichert wird</h3>
-                <p class="card-subtitle">Alles, was du bisher lokal gepflegt hast, liegt nach dem Login in deiner Cloud.</p>
+              <div class="field">
+                <label for="signup-email">E-Mail-Adresse</label>
+                <input class="template-input" id="signup-email" type="email" name="email" required placeholder="beispiel@schule.ch">
               </div>
-            </div>
-            <div class="mini-list">
-              <div class="mini-item"><div class="mini-item-content"><h4>Hausaufgaben</h4><p>Titel, Fälligkeiten, Status und Notizen.</p></div></div>
-              <div class="mini-item"><div class="mini-item-content"><h4>Prüfungen</h4><p>Termine, Themen und Lern-Checklisten.</p></div></div>
-              <div class="mini-item"><div class="mini-item-content"><h4>Stundenplan & Fächer</h4><p>Alle Lektionen, Farben, Räume und Lehrpersonen.</p></div></div>
-              <div class="mini-item"><div class="mini-item-content"><h4>Einstellungen</h4><p>Name, Klasse, Theme und visuelle Hinweise.</p></div></div>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Migration aus dem Browser</h3>
-                <p class="card-subtitle">Bestehende lokale Daten gehen nicht verloren.</p>
+              <div class="field">
+                <label for="signup-password">Passwort</label>
+                <input class="template-input" id="signup-password" type="password" name="password" required minlength="6" placeholder="Mindestens 6 Zeichen">
               </div>
-            </div>
-            <div class="empty-state">
-              <span class="empty-icon">☁️</span>
-              <h3>Vorhandene Daten werden übernommen</h3>
-              <p>Wenn Firestore für dein Konto noch leer ist, übernimmt die App automatisch die bisherigen Browser-Daten als erste Cloud-Version.</p>
-            </div>
-          </article>
+              <button class="template-primary-button" type="submit">Registrieren</button>
+            </form>
+          ` : `
+            <form class="welcome-form" data-form="auth-signin">
+              <div class="field">
+                <label for="signin-email">E-Mail-Adresse</label>
+                <input class="template-input" id="signin-email" type="email" name="email" required placeholder="beispiel@schule.ch">
+              </div>
+              <div class="field">
+                <label for="signin-password">Passwort</label>
+                <input class="template-input" id="signin-password" type="password" name="password" required placeholder="Dein Passwort">
+              </div>
+              <div class="template-link-row">
+                <span class="template-link disabled">Passwort vergessen?</span>
+              </div>
+              <button class="template-primary-button" type="submit">Anmelden</button>
+            </form>
+          `}
+
+          <button class="template-outline-button google-button" type="button" data-action="sign-in-google">
+            <span class="google-mark">G</span>
+            <span>Mit Google anmelden</span>
+          </button>
+          <div class="demo-entry">
+            <span class="demo-entry-or">oder</span>
+            <button class="demo-entry-button" type="button" data-action="start-demo">
+              <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+              <span>Demo ansehen</span>
+            </button>
+            <p class="demo-entry-note">Ohne Anmeldung, mit erfundenen Beispieldaten. Deine Änderungen bleiben nur in diesem Browser.</p>
+          </div>
         </section>
       `;
     }
 
     function renderDashboard() {
       const { today, todayLessons, dueHomework, weekExams } = getDashboardData();
-      const openCount = state.homework.filter((item) => item.status === "offen").length;
-      const nextExam = sortByDate(
-        state.exams.filter((exam) => exam.date >= today),
-        "date"
-      )[0];
-      const friendlyName = state.settings.name?.trim() || "du";
-      const everythingDone = todayLessons.length === 0 && dueHomework.length === 0 && weekExams.length === 0;
+      const friendlyName = primaryDisplayName();
+      const nextLesson = nextLessonInfo();
+      const progress = homeworkProgress();
+      const dueToday = homeworkDueToday();
 
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Hallo ${escapeHtml(friendlyName)}</p>
-          <h3 class="hero-headline">Heute ist ${escapeHtml(formatDayAndDate(today))}.</h3>
-          <p class="hero-description">Schau kurz auf deinen Tag: Unterricht, fällige Aufgaben und die nächsten Prüfungen stehen bereit. Deine Änderungen werden automatisch lokal zwischengespeichert und mit deiner Cloud synchronisiert.</p>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <p class="stat-label">Heute im Plan</p>
-              <p class="stat-value">${todayLessons.length}</p>
-              <p class="stat-helper">${todayLessons.length === 1 ? "Lektion eingeplant" : "Lektionen eingeplant"}</p>
+        <section class="page-shell">
+          <div class="page-title-row">
+            <div>
+              <h1 class="page-title">Hoi ${escapeHtml(friendlyName)}!</h1>
+              <p class="page-subtitle">Heute ist ${escapeHtml(formatDayAndDate(today))}.</p>
             </div>
-            <div class="stat-card">
-              <p class="stat-label">Offene Aufgaben</p>
-              <p class="stat-value">${openCount}</p>
-              <p class="stat-helper">${dueHomework.length ? `${dueHomework.length} heute relevant` : "Heute nichts fällig"}</p>
-            </div>
-            <div class="stat-card">
-              <p class="stat-label">Nächste Prüfung</p>
-              <p class="stat-value">${nextExam ? formatDate(nextExam.date, { day: "2-digit", month: "2-digit" }) : "—"}</p>
-              <p class="stat-helper">${nextExam ? countdownInfo(nextExam.date).text : "Aktuell entspannt"}</p>
-            </div>
+            <div class="mobile-avatar">🎓</div>
           </div>
-        </section>
 
-        ${everythingDone ? `
-          <section class="card">
-            <div class="empty-state">
-              <span class="empty-icon">🎉</span>
-              <h3>Heute alles erledigt! 🎉</h3>
-              <p>Im Moment ist weder etwas fällig noch steht eine Prüfung in dieser Woche an. Perfekter Zeitpunkt für eine Lernpause.</p>
-            </div>
-          </section>
-        ` : ""}
-
-        <section class="content-grid dashboard-grid">
-          <article class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Heute im Stundenplan</h3>
-                <p class="card-subtitle">${todayLessons.length ? "Deine Lektionen für den Tag." : "Heute ist kein Stundenplan hinterlegt."}</p>
+          <article class="template-panel next-lesson-card">
+            ${nextLesson.lesson ? `
+              <div class="next-lesson-icon">
+                <span class="material-symbols-outlined">schedule</span>
               </div>
+              <div class="next-lesson-copy">
+                <p class="panel-kicker">${nextLesson.isLive ? "Aktuelle Lektion" : "Nächste Lektion"}</p>
+                <div class="next-lesson-time">${escapeHtml(formatTimeRange(nextLesson.lesson.startTime, nextLesson.lesson.endTime))}</div>
+                <strong>${escapeHtml(nextLesson.subject?.name || "Unterricht")}</strong>
+                <span>${escapeHtml(nextLesson.subject?.teacher || "Heute im Fokus")}</span>
+              </div>
+              <div class="next-lesson-visual" style="background:${escapeHtml(subjectVisual(nextLesson.lesson.fachId).gradient)}">
+                <span class="material-symbols-outlined">${subjectVisual(nextLesson.lesson.fachId).icon}</span>
+              </div>
+            ` : `
+              <div class="next-lesson-copy solo">
+                <p class="panel-kicker">Heute frei</p>
+                <div class="next-lesson-time">Kein Unterricht mehr</div>
+                <span>Nutze die Zeit für Hausaufgaben oder eine Lernpause.</span>
+              </div>
+            `}
+          </article>
+
+          <article class="template-panel tracker-card-template">
+            <div class="panel-heading-row">
+              <h2>Aufgaben-Tracker</h2>
+              <strong>${progress.done} von ${progress.total || 0} erledigt</strong>
+            </div>
+            <div class="tracker-progress">
+              <span style="width:${progress.percent}%"></span>
+            </div>
+            <div class="tracker-footer-row">
+              <span>${progress.done} von ${progress.total || 0} erledigt</span>
+              <span>Noch ${progress.open} Aufgaben offen</span>
+            </div>
+          </article>
+
+          <section class="page-section">
+            <div class="panel-heading-row">
+              <h2>Stundenplan heute</h2>
             </div>
             ${todayLessons.length ? `
-              <div class="mini-list">
+              <div class="schedule-strip">
                 ${todayLessons.map((lesson) => {
                   const subject = getSubject(lesson.fachId);
+                  const visual = subjectVisual(lesson.fachId);
                   return `
-                    <div class="lesson-inline">
-                      <span class="lesson-dot" style="--dot-color:${escapeHtml(subject?.color || "#7c5cbf")}"></span>
-                      <div class="mini-item-content">
-                        <h4>${escapeHtml(subject?.name || "Unbekanntes Fach")}</h4>
-                        <p>${escapeHtml(formatTimeRange(lesson.startTime, lesson.endTime))} · Raum ${escapeHtml(lesson.room || subject?.room || "—")}</p>
+                    <button class="schedule-subject-card" type="button" data-action="open-lesson-modal" data-lesson-id="${lesson.id}" style="--subject-gradient:${escapeHtml(visual.gradient)};--subject-glow:${escapeHtml(visual.glow)}">
+                      <div>
+                        <strong>${escapeHtml(subject?.name || "Fach")}</strong>
+                        <span>${escapeHtml(formatTimeRange(lesson.startTime, lesson.endTime))}</span>
+                        <small>${escapeHtml(subject?.teacher || "Unterricht")}</small>
                       </div>
-                    </div>
+                      <span class="subject-corner-icon material-symbols-outlined">${visual.icon}</span>
+                    </button>
                   `;
                 }).join("")}
               </div>
             ` : `
-              <div class="empty-state">
-                <span class="empty-icon">📚</span>
-                <h3>Noch kein Stundenplan hinterlegt</h3>
-                <p>Lege im Bereich Stundenplan deine Fächer und Lektionen an, damit hier automatisch dein Tag erscheint.</p>
-              </div>
+              <article class="template-panel empty-template-panel">
+                <strong>Heute ist kein Stundenplan hinterlegt.</strong>
+              </article>
             `}
-          </article>
+          </section>
 
-          <article class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Offene Hausaufgaben</h3>
-                <p class="card-subtitle">Fällige oder überfällige Aufgaben bis heute. Ein Klick markiert sie als erledigt.</p>
-              </div>
+          <article class="template-panel homework-today-card">
+            <div class="panel-heading-row">
+              <h2>Hausaufgaben heute</h2>
+              <strong>${dueToday.length} offen</strong>
             </div>
-            ${dueHomework.length ? `
-              <div class="mini-list">
-                ${dueHomework.map((item) => `
-                  <div class="mini-item">
-                    <div class="mini-item-content">
-                      <div class="list-summary-head">
-                        ${renderSubjectBadge(item.fachId)}
-                        ${renderStatusBadge(item.status)}
-                      </div>
-                      <h4>${escapeHtml(item.title)}</h4>
-                      <p>Fällig am ${escapeHtml(formatShortDate(item.dueDate))}</p>
-                    </div>
-                    <div class="button-row">
-                      ${renderCountdown(item.dueDate)}
-                      <button class="button" type="button" data-action="complete-homework" data-homework-id="${item.id}">Erledigt</button>
-                    </div>
-                  </div>
+            ${dueToday.length ? `
+              <div class="homework-today-list">
+                ${dueToday.slice(0, 5).map((item) => `
+                  <button class="homework-today-row" type="button" data-action="toggle-homework-expand" data-homework-id="${item.id}">
+                    <strong>${escapeHtml(getSubject(item.fachId)?.name || "Fach")}:</strong>
+                    <span>${escapeHtml(item.title)}</span>
+                  </button>
                 `).join("")}
               </div>
             ` : `
-              <div class="empty-state">
-                <span class="empty-icon">✅</span>
-                <h3>Heute alles erledigt! 🎉</h3>
-                <p>Keine offenen Hausaufgaben bis heute. Gute Arbeit.</p>
-              </div>
+              <p class="muted-text">Heute sind keine offenen Hausaufgaben mehr fällig.</p>
             `}
           </article>
 
-          <article class="card">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">Prüfungen diese Woche</h3>
-                <p class="card-subtitle">Alle Prüfungen innerhalb der nächsten sieben Tage.</p>
-              </div>
+          <article class="template-panel">
+            <div class="panel-heading-row">
+              <h2>Prüfungen diese Woche</h2>
             </div>
             ${weekExams.length ? `
-              <div class="mini-list">
+              <div class="mini-list template-list-tight">
                 ${weekExams.map((exam) => `
                   <div class="mini-item">
                     <div class="mini-item-content">
@@ -3120,11 +4656,7 @@
                 `).join("")}
               </div>
             ` : `
-              <div class="empty-state">
-                <span class="empty-icon">🏆</span>
-                <h3>Keine anstehenden Prüfungen</h3>
-                <p>Für diese Woche ist aktuell keine Prüfung eingetragen.</p>
-              </div>
+              <p class="muted-text">Diese Woche sind keine Prüfungen eingetragen.</p>
             `}
           </article>
         </section>
@@ -3176,6 +4708,7 @@
 
         const lessonBlocks = lessons.map((lesson) => {
           const subject = getSubject(lesson.fachId);
+          const visual = subjectVisual(lesson.fachId);
           const top = lessonTopFromTime(lesson.startTime) + 5;
           return `
             <button
@@ -3185,8 +4718,12 @@
               data-action="open-lesson-modal"
               data-lesson-id="${lesson.id}"
             >
-              <strong>${escapeHtml(subject?.name || "Fach fehlt")}</strong>
-              <small>${escapeHtml(formatTimeRange(lesson.startTime, lesson.endTime))}<br>Raum ${escapeHtml(lesson.room || subject?.room || "—")}</small>
+              <div class="lesson-block-head">
+                <span class="material-symbols-outlined">${visual.icon}</span>
+                <strong>${escapeHtml(subject?.name || "Fach fehlt")}</strong>
+              </div>
+              <small>${escapeHtml(formatTimeRange(lesson.startTime, lesson.endTime))}</small>
+              <small>${escapeHtml(subject?.teacher || "Unterricht")}</small>
             </button>
           `;
         }).join("");
@@ -3207,33 +4744,60 @@
     }
 
     function renderStundenplan() {
+      const lessonCount = state.timetable.length;
+      const populatedDays = WEEKDAYS.filter((day) => getLessonsForWeekday(day).length > 0);
+      const busiestDay = WEEKDAYS.reduce((best, day) => {
+        const count = getLessonsForWeekday(day).length;
+        return count > best.count ? { day, count } : best;
+      }, { day: "Mo", count: 0 });
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Wochenansicht</p>
-          <h3 class="hero-headline">Dein Unterricht von Montag bis Freitag.</h3>
-          <p class="hero-description">Klicke auf einen freien Slot, um eine Lektion anzulegen. Über die Fächerverwaltung definierst du Namen, Farben, Lehrpersonen und Stammräume nur einmal zentral.</p>
-          <div class="hero-actions">
-            <button class="button" type="button" data-action="open-subject-manager">Fächer verwalten</button>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-header">
+        <section class="page-shell">
+          <div class="page-title-row">
             <div>
-              <h3 class="card-title">Wochenraster</h3>
-              <p class="card-subtitle">Zeitfenster von 07:00 bis 18:00 Uhr. Lektionen lassen sich direkt per Klick bearbeiten.</p>
+              <h1 class="page-title">Stundenplan</h1>
+              <p class="page-subtitle">Dein Unterricht von Montag bis Freitag im selben freundlichen Überblick.</p>
             </div>
-            <div class="section-actions">
-              <button class="ghost-button" type="button" data-action="open-subject-manager">Fächer verwalten</button>
-            </div>
+            <button class="template-mini-action" type="button" data-action="open-lesson-modal" aria-label="Lektion hinzufügen">
+              <span class="material-symbols-outlined">add</span>
+            </button>
           </div>
-          ${state.timetable.length ? renderScheduleBoard() : `
-            <div class="empty-state">
-              <span class="empty-icon">📅</span>
-              <h3>Noch kein Stundenplan hinterlegt</h3>
-              <p>Lege zuerst Fächer an und klicke danach auf freie Zeitfenster, um deine Woche zu füllen.</p>
+
+          <section class="week-highlight-grid">
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Lektionen</span>
+              <strong>${lessonCount}</strong>
+              <p>So viele Unterrichtsblöcke sind aktuell in deiner Woche eingetragen.</p>
+            </article>
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Aktive Tage</span>
+              <strong>${populatedDays.length || 0}</strong>
+              <p>${populatedDays.length ? `${populatedDays.join(", ")} sind bereits gefüllt.` : "Lege deinen ersten Schultag an."}</p>
+            </article>
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Meiste Lektionen</span>
+              <strong>${busiestDay.count ? `${busiestDay.day} · ${busiestDay.count}` : "Noch offen"}</strong>
+              <p>${busiestDay.count ? "Dieser Tag ist im Moment am vollsten geplant." : "Sobald du Lektionen einträgst, siehst du hier den intensivsten Tag."}</p>
+            </article>
+          </section>
+
+          <section class="template-panel schedule-template-panel">
+            <div class="panel-heading-row">
+              <div>
+                <h2>Wochenraster</h2>
+                <p class="page-subtitle">Tippe auf freie Felder, um neue Lektionen anzulegen. Die Fächerverwaltung bleibt die zentrale Quelle für Namen, Farben und Lehrpersonen.</p>
+              </div>
+              <div class="section-actions">
+                <button class="template-outline-button schedule-action-button" type="button" data-action="open-subject-manager">Fächer verwalten</button>
+              </div>
             </div>
-          `}
+            ${renderScheduleBoard()}
+            ${!state.timetable.length ? `
+              <article class="template-panel empty-template-panel schedule-empty-state">
+                <strong>Noch kein Stundenplan hinterlegt</strong>
+                <p>Klicke im Wochenraster auf einen freien Slot, damit deine erste Lektion erscheint.</p>
+              </article>
+            ` : ""}
+          </section>
         </section>
       `;
     }
@@ -3246,101 +4810,129 @@
       });
     }
 
-    function renderHomework() {
-      const items = filteredHomework();
+    function renderHomeworkTemplateCard(item) {
+      const subject = getSubject(item.fachId);
+      const visual = subjectVisual(item.fachId);
+      const expanded = ui.expandedHomework.has(item.id);
+      const done = item.status === "erledigt";
+      const countdown = countdownInfo(item.dueDate);
+      const dueLabel = countdown.className === "overdue"
+        ? countdown.text
+        : countdown.text === "heute"
+          ? "Bis heute"
+          : countdown.text === "morgen"
+            ? "Bis morgen"
+            : countdown.text.replace(/^in /, "Bis ");
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Aufgaben-Board</p>
-          <h3 class="hero-headline">Alles gesammelt, was noch offen ist.</h3>
-          <p class="hero-description">Filtere nach Fach und Status, ergänze Notizen inline und hake Aufgaben direkt ab. Jede Änderung wird automatisch mit deiner Cloud synchronisiert.</p>
-        </section>
-
-        <section class="card">
-          <div class="card-header">
-            <div>
-              <h3 class="card-title">Alle Hausaufgaben</h3>
-              <p class="card-subtitle">Farbcodes kommen direkt aus deinen globalen Fächern.</p>
-            </div>
-            <div class="section-actions">
-              <button class="button mobile-hidden" type="button" data-action="open-homework-modal">Neue Hausaufgabe</button>
-            </div>
-          </div>
-          <div class="filter-bar">
-            <select data-filter="homework-subject">
-              <option value="all">Alle Fächer</option>
-              ${state.subjects.map((subject) => `
-                <option value="${subject.id}" ${ui.homeworkFilterSubject === subject.id ? "selected" : ""}>${escapeHtml(subject.name)}</option>
-              `).join("")}
-            </select>
-            <select data-filter="homework-status">
-              <option value="alle" ${ui.homeworkFilterStatus === "alle" ? "selected" : ""}>Alle Status</option>
-              <option value="offen" ${ui.homeworkFilterStatus === "offen" ? "selected" : ""}>Nur offen</option>
-              <option value="erledigt" ${ui.homeworkFilterStatus === "erledigt" ? "selected" : ""}>Nur erledigt</option>
-            </select>
-          </div>
-        </section>
-
-        <section class="list-stack">
-          ${items.length ? items.map((item) => {
-            const expanded = ui.expandedHomework.has(item.id);
-            return `
-              <article class="list-card ${expanded ? "expanded" : ""}">
-                <div class="list-card-top">
-                  <button class="item-summary" type="button" data-action="toggle-homework-expand" data-homework-id="${item.id}">
-                    <div class="list-summary-head">
-                      ${renderSubjectBadge(item.fachId)}
-                      ${renderStatusBadge(item.status)}
-                      ${renderCountdown(item.dueDate)}
-                    </div>
-                    <div>
-                      <h4 class="list-summary-title">${escapeHtml(item.title)}</h4>
-                      <div class="list-summary-meta">
-                        <span>Fällig am ${escapeHtml(formatShortDate(item.dueDate))}</span>
-                        <span>•</span>
-                        <span>${escapeHtml(item.createdAt ? formatDate(new Date(item.createdAt), { day: "2-digit", month: "2-digit", year: "numeric" }) : "heute")}</span>
-                      </div>
-                    </div>
-                  </button>
-
-                  <div class="inline-actions">
-                    <label class="soft-chip" title="Status umschalten">
-                      <input class="task-check" type="checkbox" data-homework-status="${item.id}" ${item.status === "erledigt" ? "checked" : ""}>
-                      <span>${item.status === "erledigt" ? "Fertig" : "Offen"}</span>
-                    </label>
-                    <button class="tiny-button" type="button" data-action="open-homework-modal" data-homework-id="${item.id}" aria-label="Hausaufgabe bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
-                    <button class="tiny-button danger" type="button" data-action="delete-homework" data-homework-id="${item.id}" aria-label="Hausaufgabe löschen"><span class="material-symbols-outlined" style="font-size: 1.1em;">delete</span></button>
-                  </div>
-                </div>
-
-                ${expanded ? `
-                  <div class="list-body">
-                    <div class="meta-grid">
-                      <div class="meta-card">
-                        <strong>Beschreibung</strong>
-                        <div class="muted-text">${item.description ? escapeHtml(item.description) : "Keine Beschreibung hinterlegt."}</div>
-                      </div>
-                      <div class="meta-card">
-                        <strong>Status</strong>
-                        <div class="muted-text">${item.status === "erledigt" ? "Diese Aufgabe ist abgeschlossen." : "Diese Aufgabe ist noch offen."}</div>
-                      </div>
-                    </div>
-                    <div class="inline-note field">
-                      <label for="note-hw-${item.id}">Notiz</label>
-                      <textarea id="note-hw-${item.id}" data-note-type="homework" data-item-id="${item.id}" placeholder="Zusätzliche Gedanken, Material oder Erinnerung eintragen...">${escapeHtml(item.note || "")}</textarea>
-                    </div>
-                  </div>
-                ` : ""}
-              </article>
-            `;
-          }).join("") : `
-            <section class="card">
-              <div class="empty-state">
-                <span class="empty-icon">📝</span>
-                <h3>Keine offenen Aufgaben</h3>
-                <p>Hier werden deine Hausaufgaben angezeigt, sobald du welche anlegst oder den Filter wieder erweiterst.</p>
+        <article class="homework-template-card ${done ? "done" : ""}" style="--card-gradient:${escapeHtml(visual.gradient)};--card-tint:${escapeHtml(visual.cardTint)};--card-glow:${escapeHtml(visual.glow)};">
+          <div class="homework-template-main">
+            <button class="homework-template-summary" type="button" data-action="toggle-homework-expand" data-homework-id="${item.id}">
+              <span class="homework-icon-box" style="background:${escapeHtml(visual.iconTint)}">
+                <span class="material-symbols-outlined">${visual.icon}</span>
+              </span>
+              <div class="homework-card-body">
+                <strong>${escapeHtml(subject?.name || "Fach")}</strong>
+                <h4>${escapeHtml(item.title)}</h4>
+                <p>${escapeHtml(dueLabel)}</p>
               </div>
+            </button>
+            <button class="homework-toggle-circle ${done ? "done" : ""}" type="button" data-action="toggle-homework-status-button" data-homework-id="${item.id}" aria-label="Status ändern">
+              ${done ? `<span class="material-symbols-outlined">check</span>` : ""}
+            </button>
+          </div>
+          ${expanded ? `
+            <div class="homework-template-details">
+              <div class="template-detail-card">
+                <strong>Beschreibung</strong>
+                <p>${item.description ? escapeHtml(item.description) : "Keine Beschreibung hinterlegt."}</p>
+              </div>
+              <div class="inline-note field">
+                <label for="note-hw-${item.id}">Notiz</label>
+                <textarea id="note-hw-${item.id}" data-note-type="homework" data-item-id="${item.id}" placeholder="Zusätzliche Gedanken, Material oder Erinnerung eintragen...">${escapeHtml(item.note || "")}</textarea>
+              </div>
+              <div class="template-detail-actions">
+                <button class="tiny-button danger" type="button" data-action="delete-homework" data-homework-id="${item.id}">
+                  <span class="material-symbols-outlined" style="font-size: 1.1em;">delete</span>
+                  <span>Hausaufgabe löschen</span>
+                </button>
+              </div>
+            </div>
+          ` : ""}
+        </article>
+      `;
+    }
+
+    function renderHomework() {
+      const subjectFilteredItems = sortByDate(state.homework, "dueDate").filter((item) => (
+        ui.homeworkFilterSubject === "all" || item.fachId === ui.homeworkFilterSubject
+      ));
+      const openItems = subjectFilteredItems.filter((item) => item.status === "offen");
+      const doneItems = subjectFilteredItems.filter((item) => item.status === "erledigt");
+      const showOpen = ui.homeworkFilterStatus === "alle" || ui.homeworkFilterStatus === "offen";
+      const showDone = ui.homeworkFilterStatus === "alle" || ui.homeworkFilterStatus === "erledigt";
+
+      return `
+        <section class="page-shell homework-template-screen">
+          <div class="page-title-row">
+            <div>
+              <h1 class="page-title">Hausaufgaben Liste</h1>
+              <p class="page-subtitle">Farbig sortiert nach Fach und Status.</p>
+            </div>
+            <button class="template-mini-action" type="button" data-action="open-homework-modal">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+
+          <div class="status-pill-bar">
+            <button class="status-pill ${ui.homeworkFilterStatus === "offen" ? "active" : ""}" type="button" data-action="set-homework-status-filter" data-status="offen">Offen</button>
+            <button class="status-pill ${ui.homeworkFilterStatus === "erledigt" ? "active" : ""}" type="button" data-action="set-homework-status-filter" data-status="erledigt">Erledigt</button>
+            <button class="status-pill ${ui.homeworkFilterStatus === "alle" ? "active" : ""}" type="button" data-action="set-homework-status-filter" data-status="alle">Alle</button>
+          </div>
+
+          <div class="subject-filter-row">
+            <button class="subject-filter-chip ${ui.homeworkFilterSubject === "all" ? "active" : ""}" type="button" data-action="set-homework-subject-filter" data-subject-id="all">Alle Fächer</button>
+            ${state.subjects.map((subject) => `
+              <button class="subject-filter-chip ${ui.homeworkFilterSubject === subject.id ? "active" : ""}" type="button" data-action="set-homework-subject-filter" data-subject-id="${subject.id}">
+                ${escapeHtml(subject.name)}
+              </button>
+            `).join("")}
+          </div>
+
+          ${showOpen ? `
+            <section class="homework-section-block">
+              <div class="panel-heading-row">
+                <h2>${ui.homeworkFilterStatus === "offen" ? "Offen" : "Offene Aufgaben"}</h2>
+              </div>
+              ${openItems.length ? `
+                <div class="homework-template-list">
+                  ${openItems.map(renderHomeworkTemplateCard).join("")}
+                </div>
+              ` : `
+                <article class="template-panel empty-template-panel">
+                  <strong>Keine offenen Aufgaben</strong>
+                  <p>Hier erscheinen neue Hausaufgaben, sobald du welche anlegst.</p>
+                </article>
+              `}
             </section>
-          `}
+          ` : ""}
+
+          ${showDone ? `
+            <section class="homework-section-block">
+              <div class="panel-heading-row">
+                <h2>Erledigt</h2>
+              </div>
+              ${doneItems.length ? `
+                <div class="homework-template-list">
+                  ${doneItems.map(renderHomeworkTemplateCard).join("")}
+                </div>
+              ` : `
+                <article class="template-panel empty-template-panel">
+                  <strong>Noch nichts erledigt</strong>
+                  <p>Abgehakte Aufgaben landen später hier.</p>
+                </article>
+              `}
+            </section>
+          ` : ""}
         </section>
       `;
     }
@@ -3352,62 +4944,86 @@
 
     function renderExams() {
       const items = upcomingExams();
+      const nextExam = items[0];
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Lernfokus</p>
-          <h3 class="hero-headline">Prüfungen mit Countdown, Themen und Lernhäkchen.</h3>
-          <p class="hero-description">Erweitere einzelne Einträge, um Themen zu sehen, eigene Lernschritte anzulegen und Notizen direkt bei der Prüfung zu speichern.</p>
-        </section>
-
-        <section class="card">
-          <div class="card-header">
+        <section class="page-shell">
+          <div class="page-title-row">
             <div>
-              <h3 class="card-title">Anstehende Prüfungen</h3>
-              <p class="card-subtitle">Aufsteigend nach Datum sortiert.</p>
-            </div>
-            <div class="section-actions">
-              <button class="button mobile-hidden" type="button" data-action="open-exam-modal">Neue Prüfung</button>
+              <h1 class="page-title">Prüfungen</h1>
+              <p class="page-subtitle">Countdowns, Themen und kleine Lernpläne in derselben hellen Oberfläche.</p>
             </div>
           </div>
-        </section>
 
-        <section class="list-stack">
+          <article class="template-panel exam-hero-panel">
+            <div class="panel-heading-row">
+              <div>
+                <h2>Nächster Fokus</h2>
+                <p class="page-subtitle">${nextExam ? "Die nächste Prüfung zuerst im Blick." : "Sobald du eine Prüfung anlegst, erscheint sie hier."}</p>
+              </div>
+              <button class="template-mini-action" type="button" data-action="open-exam-modal" aria-label="Prüfung hinzufügen">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+            </div>
+            ${nextExam ? `
+              <div class="exam-hero-card" style="--card-gradient:${escapeHtml(subjectVisual(nextExam.fachId).gradient)};--card-glow:${escapeHtml(subjectVisual(nextExam.fachId).glow)};">
+                <div class="exam-hero-copy">
+                  <span class="homework-icon-box exam-icon-box" style="background:${escapeHtml(subjectVisual(nextExam.fachId).iconTint)}">
+                    <span class="material-symbols-outlined">${subjectVisual(nextExam.fachId).icon}</span>
+                  </span>
+                  <div>
+                    <strong>${escapeHtml(getSubject(nextExam.fachId)?.name || "Fach")}</strong>
+                    <h3>${escapeHtml(nextExam.title)}</h3>
+                    <p>${escapeHtml(formatDate(nextExam.date, { weekday: "long", day: "2-digit", month: "long" }))}</p>
+                  </div>
+                </div>
+                <div class="countdown-bubble">${escapeHtml(countdownInfo(nextExam.date).text)}</div>
+              </div>
+            ` : `
+              <article class="template-panel empty-template-panel">
+                <strong>Keine anstehenden Prüfungen</strong>
+                <p>Lege eine neue Prüfung an, um Themen und Lernschritte zu sammeln.</p>
+              </article>
+            `}
+          </article>
+
+          <section class="exam-template-list">
           ${items.length ? items.map((exam) => {
             const expanded = ui.expandedExams.has(exam.id);
+            const visual = subjectVisual(exam.fachId);
             return `
-              <article class="list-card ${expanded ? "expanded" : ""}">
-                <div class="list-card-top">
-                  <button class="item-summary" type="button" data-action="toggle-exam-expand" data-exam-id="${exam.id}">
-                    <div class="list-summary-head">
-                      ${renderSubjectBadge(exam.fachId)}
-                      ${renderCountdown(exam.date)}
-                    </div>
-                    <div>
-                      <h4 class="list-summary-title">${escapeHtml(exam.title)}</h4>
-                      <div class="list-summary-meta">
-                        <span>${escapeHtml(formatDate(exam.date, { weekday: "long", day: "2-digit", month: "long", year: "numeric" }))}</span>
-                        <span>•</span>
-                        <span>${exam.learningChecklist.filter((item) => item.done).length}/${exam.learningChecklist.length} Lernschritte erledigt</span>
+              <article class="exam-template-card ${expanded ? "expanded" : ""}" style="--card-gradient:${escapeHtml(visual.gradient)};--card-glow:${escapeHtml(visual.glow)};--card-tint:${escapeHtml(visual.cardTint)}">
+                <div class="exam-template-top">
+                  <button class="exam-template-summary" type="button" data-action="toggle-exam-expand" data-exam-id="${exam.id}">
+                    <span class="homework-icon-box exam-icon-box" style="background:${escapeHtml(visual.iconTint)}">
+                      <span class="material-symbols-outlined">${visual.icon}</span>
+                    </span>
+                    <div class="exam-template-copy">
+                      <div class="exam-template-meta">
+                        ${renderSubjectBadge(exam.fachId)}
+                        <span class="countdown-bubble small">${escapeHtml(countdownInfo(exam.date).text)}</span>
                       </div>
+                      <h3>${escapeHtml(exam.title)}</h3>
+                      <p>${escapeHtml(formatDate(exam.date, { weekday: "long", day: "2-digit", month: "long", year: "numeric" }))}</p>
+                      <span>${exam.learningChecklist.filter((item) => item.done).length}/${exam.learningChecklist.length} Lernschritte erledigt</span>
                     </div>
                   </button>
-                  <div class="inline-actions">
+                  <div class="inline-actions exam-inline-actions">
                     <button class="tiny-button" type="button" data-action="open-exam-modal" data-exam-id="${exam.id}" aria-label="Prüfung bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
                     <button class="tiny-button danger" type="button" data-action="delete-exam" data-exam-id="${exam.id}" aria-label="Prüfung löschen"><span class="material-symbols-outlined" style="font-size: 1.1em;">delete</span></button>
                   </div>
                 </div>
 
                 ${expanded ? `
-                  <div class="list-body">
-                    <div class="field">
-                      <label>Themen</label>
-                      <div class="tag-row">
+                  <div class="exam-template-details">
+                    <div class="template-detail-card">
+                      <strong>Themen</strong>
+                      <div class="tag-row topics-cloud">
                         ${exam.topics.length ? exam.topics.map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`).join("") : `<span class="muted-text">Noch keine Themen hinterlegt.</span>`}
                       </div>
                     </div>
 
-                    <div class="field">
-                      <label>Lern-Checkliste</label>
+                    <div class="template-detail-card">
+                      <strong>Lern-Checkliste</strong>
                       <div class="checklist">
                         ${exam.learningChecklist.length ? exam.learningChecklist.map((entry) => `
                           <div class="checklist-item ${entry.done ? "done" : ""}">
@@ -3416,17 +5032,13 @@
                             <button class="tiny-button danger" type="button" data-action="delete-checklist-item" data-exam-id="${exam.id}" data-check-id="${entry.id}" aria-label="Lernschritt löschen">×</button>
                           </div>
                         `).join("") : `
-                          <div class="empty-state">
-                            <span class="empty-icon">🧠</span>
-                            <h3>Noch keine Lernschritte</h3>
-                            <p>Füge gleich unten einen ersten Lernpunkt hinzu.</p>
-                          </div>
+                          <p class="muted-text">Noch keine Lernschritte hinterlegt.</p>
                         `}
                       </div>
                       <form class="form-grid" data-form="checklist-item" data-exam-id="${exam.id}">
                         <div class="form-grid two">
                           <input type="text" name="checkText" placeholder="Zum Beispiel: Kapitel 1 wiederholen" required>
-                          <button class="ghost-button" type="submit">Lernschritt hinzufügen</button>
+                          <button class="template-outline-button exam-add-button" type="submit">Lernschritt hinzufügen</button>
                         </div>
                       </form>
                     </div>
@@ -3440,14 +5052,12 @@
               </article>
             `;
           }).join("") : `
-            <section class="card">
-              <div class="empty-state">
-                <span class="empty-icon">🏆</span>
-                <h3>Keine anstehenden Prüfungen</h3>
-                <p>Sobald du eine Prüfung anlegst, taucht sie hier mit Countdown und Lernliste auf.</p>
-              </div>
-            </section>
+            <article class="template-panel empty-template-panel">
+              <strong>Keine anstehenden Prüfungen</strong>
+              <p>Sobald du eine Prüfung anlegst, taucht sie hier mit Countdown und Lernliste auf.</p>
+            </article>
           `}
+          </section>
         </section>
       `;
     }
@@ -3461,7 +5071,7 @@
             label: "Stundenplan",
             start: lesson.startTime,
             title: getSubject(lesson.fachId)?.name || "Fach fehlt",
-            description: `Raum ${lesson.room || getSubject(lesson.fachId)?.room || "—"}`,
+            description: getSubject(lesson.fachId)?.teacher || "Unterricht laut Stundenplan",
             color: getSubject(lesson.fachId)?.color || "#7c5cbf"
           }))
         : [];
@@ -3671,60 +5281,110 @@
 
     function renderCalendar() {
       const panelOpen = Boolean(activeCalendarPanelDate());
+      const todayEvents = getEventsForDate(todayIso()).length;
+      const openHomework = state.homework.filter((item) => item.status === "offen").length;
+      const upcoming = upcomingExams().length;
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Gesamtansicht</p>
-          <h3 class="hero-headline">Kalender für Aufgaben, Prüfungen und Stundenplan.</h3>
-          <p class="hero-description">Monat, Woche oder einzelner Tag: Die Punkte im Kalender zeigen dir, wo Aufgaben, Prüfungen oder Lektionen liegen. Blaue Punkte stehen für Hausaufgaben, rote für Prüfungen und Fachfarben für Unterricht.</p>
-        </section>
-
-        <section class="card">
-          <div class="calendar-toolbar">
+        <section class="page-shell">
+          <div class="page-title-row">
             <div>
-              <h3 class="card-title">${escapeHtml(calendarLabel())}</h3>
-              <p class="card-subtitle">Mit einem Klick auf einen Tag öffnet sich die Detailansicht.</p>
-            </div>
-            <div class="toolbar-group">
-              <div class="calendar-toggle">
-                <button type="button" class="${ui.calendarView === "month" ? "active" : ""}" data-action="set-calendar-view" data-view="month">Monat</button>
-                <button type="button" class="${ui.calendarView === "week" ? "active" : ""}" data-action="set-calendar-view" data-view="week">Woche</button>
-                <button type="button" class="${ui.calendarView === "day" ? "active" : ""}" data-action="set-calendar-view" data-view="day">Tag</button>
-              </div>
-              <div class="button-row">
-                <button class="ghost-button" type="button" data-action="shift-calendar" data-direction="-1">Zurück</button>
-                <button class="ghost-button" type="button" data-action="go-calendar-today">Heute</button>
-                <button class="ghost-button" type="button" data-action="shift-calendar" data-direction="1">Weiter</button>
-              </div>
+              <h1 class="page-title">Kalender</h1>
+              <p class="page-subtitle">Alle Aufgaben, Prüfungen und Lektionen in einer einzigen Zeitansicht.</p>
             </div>
           </div>
-          <div class="legend">
-            <span class="soft-chip"><span class="event-dot" style="--dot-color:#38bdf8"></span> Hausaufgabe</span>
-            <span class="soft-chip"><span class="event-dot" style="--dot-color:#ef4444"></span> Prüfung</span>
-            <span class="soft-chip"><span class="event-dot" style="--dot-color:#7c5cbf"></span> Lektion</span>
-          </div>
-        </section>
 
-        <section class="calendar-shell ${panelOpen ? "with-panel" : ""}">
-          <div class="calendar-main">
-            <div class="calendar-card">
-              ${ui.calendarView === "month" ? renderCalendarMonth() : ui.calendarView === "week" ? renderCalendarWeek() : renderCalendarDay()}
+          <section class="week-highlight-grid calendar-highlight-grid">
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Heute</span>
+              <strong>${todayEvents}</strong>
+              <p>${todayEvents ? "Ereignisse warten heute auf dich." : "Heute ist gerade nichts eingetragen."}</p>
+            </article>
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Offene Aufgaben</span>
+              <strong>${openHomework}</strong>
+              <p>Diese Hausaufgaben sind aktuell noch nicht erledigt.</p>
+            </article>
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Prüfungen</span>
+              <strong>${upcoming}</strong>
+              <p>So viele kommende Prüfungen sind im Kalender vermerkt.</p>
+            </article>
+          </section>
+
+          <section class="template-panel calendar-toolbar-panel">
+            <div class="calendar-toolbar template-toolbar">
+              <div>
+                <h2>${escapeHtml(calendarLabel())}</h2>
+                <p class="page-subtitle">Mit einem Klick auf einen Tag öffnet sich die Detailansicht.</p>
+              </div>
+              <div class="toolbar-group">
+                <div class="calendar-toggle">
+                  <button type="button" class="${ui.calendarView === "month" ? "active" : ""}" data-action="set-calendar-view" data-view="month">Monat</button>
+                  <button type="button" class="${ui.calendarView === "week" ? "active" : ""}" data-action="set-calendar-view" data-view="week">Woche</button>
+                  <button type="button" class="${ui.calendarView === "day" ? "active" : ""}" data-action="set-calendar-view" data-view="day">Tag</button>
+                </div>
+                <div class="button-row calendar-nav-buttons">
+                  <button class="template-outline-button schedule-action-button" type="button" data-action="shift-calendar" data-direction="-1">Zurück</button>
+                  <button class="template-outline-button schedule-action-button" type="button" data-action="go-calendar-today">Heute</button>
+                  <button class="template-outline-button schedule-action-button" type="button" data-action="shift-calendar" data-direction="1">Weiter</button>
+                </div>
+              </div>
             </div>
-          </div>
-          ${panelOpen ? renderCalendarPanel() : ""}
+            <div class="legend">
+              <span class="soft-chip"><span class="event-dot" style="--dot-color:#38bdf8"></span> Hausaufgabe</span>
+              <span class="soft-chip"><span class="event-dot" style="--dot-color:#ef4444"></span> Prüfung</span>
+              <span class="soft-chip"><span class="event-dot" style="--dot-color:#7c5cbf"></span> Lektion</span>
+            </div>
+          </section>
+
+          <section class="calendar-shell ${panelOpen ? "with-panel" : ""}">
+            <div class="calendar-main">
+              <div class="calendar-card template-calendar-card">
+                ${ui.calendarView === "month" ? renderCalendarMonth() : ui.calendarView === "week" ? renderCalendarWeek() : renderCalendarDay()}
+              </div>
+            </div>
+            ${panelOpen ? renderCalendarPanel() : ""}
+          </section>
         </section>
       `;
     }
 
     function renderSettings() {
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Personalisierung</p>
-          <h3 class="hero-headline">Passe die App an deinen Alltag an.</h3>
-          <p class="hero-description">Name, Klasse, Erinnerungsschalter und Theme werden sofort gespeichert und zwischen deinen Geräten abgeglichen. Über die Fächerverwaltung pflegst du die gemeinsame Basis für den gesamten Rest der App.</p>
-        </section>
+        <section class="page-shell">
+          <div class="page-title-row">
+            <div>
+              <h1 class="page-title">Einstellungen</h1>
+              <p class="page-subtitle">Passe Profil, Darstellung und deine Fächerbasis an deinen Schulalltag an.</p>
+            </div>
+          </div>
 
-        <section class="settings-grid">
-          <article class="card">
+          <article class="template-panel settings-summary-panel">
+            <div class="panel-heading-row">
+              <div>
+                <h2>Dein Profil</h2>
+                <p class="page-subtitle">Änderungen werden sofort lokal und in der Cloud gespeichert.</p>
+              </div>
+              <span class="soft-chip">${escapeHtml(state.settings.klasse || "Keine Klasse")}</span>
+            </div>
+            <div class="settings-summary-grid">
+              <div class="settings-summary-item">
+                <span>Name</span>
+                <strong>${escapeHtml(state.settings.name || appStatus.user?.displayName || "Noch nicht eingetragen")}</strong>
+              </div>
+              <div class="settings-summary-item">
+                <span>Konto</span>
+                <strong>${escapeHtml(appStatus.user?.email || "Nicht angemeldet")}</strong>
+              </div>
+              <div class="settings-summary-item">
+                <span>Fächer</span>
+                <strong>${state.subjects.length}</strong>
+              </div>
+            </div>
+          </article>
+
+          <section class="settings-grid settings-template-grid">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Cloud-Konto</h3>
@@ -3748,7 +5408,7 @@
             </div>
           </article>
 
-          <article class="card">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Profil</h3>
@@ -3767,7 +5427,7 @@
             </div>
           </article>
 
-          <article class="card">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Darstellung & Hinweise</h3>
@@ -3785,21 +5445,10 @@
                   <span></span>
                 </label>
               </div>
-
-              <div class="toggle-card">
-                <div class="toggle-copy">
-                  <strong>Dark Mode</strong>
-                  <p>Wechselt zwischen dunklem und hellem Erscheinungsbild.</p>
-                </div>
-                <label class="switch">
-                  <input type="checkbox" data-setting-toggle="darkMode" ${(state.settings.darkMode === "dark" || (state.settings.darkMode !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? "checked" : ""}>
-                  <span></span>
-                </label>
-              </div>
             </div>
           </article>
 
-          <article class="card">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Fächer verwalten</h3>
@@ -3817,7 +5466,7 @@
                       <span class="subject-swatch" style="--swatch-color:${escapeHtml(subject.color)}"></span>
                       <div>
                         <strong>${escapeHtml(subject.name)}</strong>
-                        <div class="muted-text">${escapeHtml(subject.teacher || "Keine Lehrperson")} · Raum ${escapeHtml(subject.room || "—")}</div>
+                        <div class="muted-text">${escapeHtml(subject.teacher || "Keine Lehrperson")}</div>
                       </div>
                     </div>
                     <button class="tiny-button" type="button" data-action="open-subject-manager" data-subject-id="${subject.id}" aria-label="Fach bearbeiten"><span class="material-symbols-outlined" style="font-size: 1.1em;">edit</span></button>
@@ -3833,7 +5482,7 @@
             `}
           </article>
 
-          <article class="card">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Datenverwaltung</h3>
@@ -3848,12 +5497,17 @@
               </div>
             </div>
           </article>
+          </section>
         </section>
       `;
     }
 
     function renderAdmin() {
       const selected = appStatus.adminDetail;
+      const users = visibleAdminUsers();
+      const pendingUsers = sortedAdminUsers().filter((user) => !user.approved);
+      const selectedPendingCount = users.filter((user) => !user.approved && ui.selectedAdminUids.has(user.uid)).length;
+      const allVisiblePendingSelected = users.length > 0 && users.every((user) => ui.selectedAdminUids.has(user.uid));
       const totals = appStatus.adminUsers.reduce((acc, user) => {
         acc.users += 1;
         acc.homework += user.summary?.homework || 0;
@@ -3863,56 +5517,78 @@
       }, { users: 0, homework: 0, openHomework: 0, exams: 0 });
 
       return `
-        <section class="hero-card">
-          <p class="eyebrow">Administration</p>
-          <h3 class="hero-headline">Alle registrierten Konten und gespeicherten Zustände.</h3>
-          <p class="hero-description">Dieser Bereich ist nur für definierte Admin-Konten sichtbar. Du kannst hier Nutzerkonten, Statusdaten und die gespeicherten App-Inhalte einsehen.</p>
-          <div class="hero-actions">
-            <button class="ghost-button" type="button" data-action="refresh-admin">Adminbereich aktualisieren</button>
+        <section class="page-shell">
+          <div class="page-title-row">
+            <div>
+              <h1 class="page-title">Adminbereich</h1>
+              <p class="page-subtitle">Wartende Anmeldungen zuerst, schnelle Sammel-Freigabe und Details nur bei Bedarf.</p>
+            </div>
+            <button class="template-outline-button schedule-action-button" type="button" data-action="refresh-admin">Aktualisieren</button>
           </div>
-        </section>
 
-        <section class="stats-grid">
-          <div class="stat-card">
-            <p class="stat-label">Konten</p>
-            <p class="stat-value">${totals.users}</p>
-            <p class="stat-helper">Registrierte Benutzer im System</p>
-          </div>
-          <div class="stat-card">
-            <p class="stat-label">Hausaufgaben</p>
-            <p class="stat-value">${totals.homework}</p>
-            <p class="stat-helper">${totals.openHomework} davon offen</p>
-          </div>
-          <div class="stat-card">
-            <p class="stat-label">Prüfungen</p>
-            <p class="stat-value">${totals.exams}</p>
-            <p class="stat-helper">Über alle Konten hinweg</p>
-          </div>
-        </section>
+          <section class="week-highlight-grid">
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Wartend</span>
+              <strong>${pendingUsers.length}</strong>
+              <p>Diese Konten brauchen noch deine Freigabe.</p>
+            </article>
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Konten</span>
+              <strong>${totals.users}</strong>
+              <p>Gesamte registrierte Benutzerzahl im System.</p>
+            </article>
+            <article class="template-panel week-highlight-card">
+              <span class="week-highlight-label">Offene Aufgaben</span>
+              <strong>${totals.openHomework}</strong>
+              <p>So viele unerledigte Hausaufgaben liegen über alle Konten hinweg vor.</p>
+            </article>
+          </section>
 
-        <section class="content-grid two-col">
-          <article class="card">
+          <article class="template-panel admin-toolbar-panel">
+            <div class="status-pill-bar admin-filter-bar">
+              <button class="status-pill ${ui.adminFilterStatus === "pending" ? "active" : ""}" type="button" data-action="set-admin-filter" data-filter="pending">Wartend</button>
+              <button class="status-pill ${ui.adminFilterStatus === "approved" ? "active" : ""}" type="button" data-action="set-admin-filter" data-filter="approved">Freigegeben</button>
+              <button class="status-pill ${ui.adminFilterStatus === "all" ? "active" : ""}" type="button" data-action="set-admin-filter" data-filter="all">Alle</button>
+            </div>
+            <div class="admin-bulk-actions">
+              <label class="admin-select-all">
+                <input type="checkbox" data-action="toggle-admin-select-all" ${allVisiblePendingSelected ? "checked" : ""}>
+                <span>Sichtbare Konten auswählen</span>
+              </label>
+              <button class="template-primary-button admin-bulk-button" type="button" data-action="admin-bulk-approve" ${selectedPendingCount ? "" : "disabled"}>
+                ${selectedPendingCount ? `${selectedPendingCount} wartende freischalten` : "Keine wartenden ausgewählt"}
+              </button>
+            </div>
+          </article>
+
+          <section class="content-grid two-col">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Benutzerliste</h3>
-                <p class="card-subtitle">Wähle ein Konto aus, um dessen gespeicherte Daten im Detail zu sehen.</p>
+                <p class="card-subtitle">Nach Status gefiltert und mit Checkboxen für Sammel-Freigaben.</p>
               </div>
             </div>
-            ${appStatus.adminUsers.length ? `
-              <div class="mini-list">
-                ${appStatus.adminUsers.map((user) => `
-                  <div class="mini-item">
-                    <div class="mini-item-content">
-                      <div class="list-summary-head">
-                        <span class="soft-chip">${escapeHtml(user.provider || "password")}</span>
-                        <span class="soft-chip">${user.disabled ? "deaktiviert" : "aktiv"}</span>
+            ${users.length ? `
+              <div class="mini-list admin-user-list">
+                ${users.map((user) => `
+                  <div class="mini-item admin-user-item ${ui.adminSelectedUid === user.uid ? "selected" : ""}">
+                    <label class="admin-user-checkbox">
+                      <input type="checkbox" data-action="toggle-admin-checkbox" data-uid="${escapeHtml(user.uid)}" ${ui.selectedAdminUids.has(user.uid) ? "checked" : ""}>
+                      <span></span>
+                    </label>
+                    <button class="admin-user-button" type="button" data-action="select-admin-user" data-admin-uid="${escapeHtml(user.uid)}">
+                      <div class="mini-item-content">
+                        <div class="list-summary-head">
+                          <span class="soft-chip">${user.approved ? "freigegeben" : "wartet"}</span>
+                          <span class="soft-chip">${escapeHtml(user.provider || "password")}</span>
+                        </div>
+                        <h4>${escapeHtml(user.displayName || user.email || user.uid)}</h4>
+                        <p>${escapeHtml(user.email || "Keine E-Mail")} · ${new Date(user.createdAt).toLocaleDateString("de-CH")}</p>
                       </div>
-                      <h4>${escapeHtml(user.displayName || user.email || user.uid)}</h4>
-                      <div style="font-size:14px;color:var(--text-secondary);margin-bottom:8px">Registriert: ${new Date(user.createdAt).toLocaleDateString()}</div>
-                      <div style="font-size:14px;color:var(--text-secondary)">Genehmigt: <strong>${user.approved ? "Ja" : "Nein"}</strong></div>
-                    </div>
-                    <div>
-                      <button class="button" data-action="select-admin-user" data-admin-uid="${escapeHtml(user.uid)}">Details</button>
+                    </button>
+                    <div class="admin-user-actions">
+                      ${!user.approved ? `<button class="ghost-button admin-inline-approve" type="button" data-action="admin-toggle-approval" data-uid="${escapeHtml(user.uid)}" data-approved="true">Freigeben</button>` : ""}
                     </div>
                   </div>
                 `).join("")}
@@ -3926,11 +5602,11 @@
             `}
           </article>
 
-          <article class="card">
+          <article class="template-panel settings-template-card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">Benutzerdetails</h3>
-                <p class="card-subtitle">Kompletter gespeicherter Zustand des ausgewählten Kontos.</p>
+                <p class="card-subtitle">Details und Einzelschritte für das ausgewählte Konto.</p>
               </div>
             </div>
             ${appStatus.adminLoading ? `
@@ -3957,15 +5633,18 @@
                     <p>${selected.summary.subjects} Fächer · ${selected.summary.homework} Hausaufgaben · ${selected.summary.openHomework} offen · ${selected.summary.exams} Prüfungen · ${selected.summary.lessons} Lektionen</p>
                   </div>
                 </div>
-                <div class="button-row" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; gap: 10px;">
+                <div class="button-row" style="margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px; gap: 10px;">
                   <button class="${selected.approved ? "danger-button" : "button"}" type="button" data-action="admin-toggle-approval" data-uid="${escapeHtml(selected.uid)}" data-approved="${selected.approved ? 'false' : 'true'}">
-                    ${selected.approved ? "Benutzer löschen (sperren)" : "Genehmigen"}
+                    ${selected.approved ? "Benutzer sperren" : "Genehmigen"}
                   </button>
                   <button class="button" type="button" data-action="admin-seed-user" data-uid="${escapeHtml(selected.uid)}">
                     <span class="material-symbols-outlined" style="font-size: 1em; margin-right: 6px;">database</span> Beispieldaten laden
                   </button>
+                  <button class="danger-button" type="button" data-action="admin-delete-user" data-uid="${escapeHtml(selected.uid)}">
+                    Benutzer löschen
+                  </button>
                 </div>
-                <div class="field" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
+                <div class="field" style="margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px;">
                   <label for="admin-new-password">Neues Passwort setzen</label>
                   <div style="display: flex; gap: 10px; align-items: flex-start;">
                     <input id="admin-new-password" type="text" placeholder="Neues Passwort" style="flex: 1;">
@@ -3983,10 +5662,11 @@
               <div class="empty-state">
                 <span class="empty-icon">🗂</span>
                 <h3>Kein Benutzer ausgewählt</h3>
-                <p>Wähle links ein Konto aus, um alle gespeicherten Inhalte anzusehen.</p>
+                <p>Wähle links ein Konto aus, um Freigabe, Passwort oder gespeicherte Inhalte zu verwalten.</p>
               </div>
             `}
           </article>
+          </section>
         </section>
       `;
     }
@@ -4015,31 +5695,18 @@
         content = renderAdmin();
       }
 
+      if (appStatus.demoMode) {
+        content = `
+          <div class="demo-ribbon" role="note">
+            <strong>DEMO</strong>
+            <span>Du schaust dir Stop &amp; Learn mit erfundenen Beispieldaten an. Probier alles aus – nichts wird in der Cloud gespeichert.</span>
+            <button type="button" data-action="reset-demo">Demo zurücksetzen</button>
+            <button type="button" data-action="log-out">Demo beenden</button>
+          </div>
+        ` + content;
+      }
+
       root.innerHTML = content;
-    }
-
-    function renderFab() {
-      const button = document.getElementById("fabButton");
-      if (appStatus.mode !== "ready") {
-        button.classList.add("hidden");
-        button.dataset.action = "";
-        button.textContent = "";
-        return;
-      }
-
-      if (ui.section === "hausaufgaben") {
-        button.classList.remove("hidden");
-        button.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px; font-size:1.1em;">add</span> Neue Hausaufgabe';
-        button.dataset.action = "open-homework-modal";
-      } else if (ui.section === "pruefungen") {
-        button.classList.remove("hidden");
-        button.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px; font-size:1.1em;">add</span> Neue Prüfung';
-        button.dataset.action = "open-exam-modal";
-      } else {
-        button.classList.add("hidden");
-        button.dataset.action = "";
-        button.textContent = "";
-      }
     }
 
     function renderSubjectOptions(selectedId = "") {
@@ -4236,7 +5903,7 @@
             <div>
               <p class="eyebrow">Stundenplan</p>
               <h3 class="card-title">${lesson ? "Lektion bearbeiten" : "Neue Lektion"}</h3>
-              <p>Lege Wochentag, Fach, Zeit und Raum fest. Überschneidungen werden erkannt, damit der Plan sauber bleibt.</p>
+              <p>Lege Wochentag, Fach und Zeit fest. Überschneidungen werden erkannt, damit der Plan sauber bleibt.</p>
             </div>
             <button class="tiny-button" type="button" data-action="close-modal"><span class="material-symbols-outlined" style="font-size: 1.1em;">close</span></button>
           </div>
@@ -4267,10 +5934,6 @@
                 <input id="lesson-end" type="time" name="endTime" required value="${escapeHtml(values.endTime)}">
               </div>
             </div>
-            <div class="field">
-              <label for="lesson-room">Raum</label>
-              <input id="lesson-room" type="text" name="room" value="${escapeHtml(values.room || "")}" placeholder="Zum Beispiel B204">
-            </div>
             <div class="button-row">
               <button class="button" type="submit">${lesson ? "Änderungen speichern" : "Lektion anlegen"}</button>
               ${lesson ? `<button class="danger-button" type="button" data-action="delete-lesson" data-lesson-id="${lesson.id}">Lektion löschen</button>` : ""}
@@ -4285,6 +5948,13 @@
       const subject = state.subjects.find((entry) => entry.id === subjectId);
       const subjectDraft = getDraft("subject", subjectId || "new");
       const values = { id: "", name: "", color: "#7c5cbf", teacher: "", room: "", ...(subject || {}), ...subjectDraft };
+      const lessonDraft = subject
+        ? ui.subjectLessonDrafts[subject.id] || { weekday: "Mo", startTime: "08:00", room: "" }
+        : { weekday: "Mo", startTime: "08:00", room: "" };
+      
+      // Existing timetable entries for this subject
+      const subjectLessons = subject ? state.timetable.filter(l => l.fachId === subject.id) : [];
+      
       return `
         <div class="modal-card wide">
           <div class="modal-header">
@@ -4304,6 +5974,7 @@
                     <div>
                       <h4>${escapeHtml(item.name)}</h4>
                       <p>${escapeHtml(item.teacher || "Keine Lehrperson")} · Raum ${escapeHtml(item.room || "—")}</p>
+                      <p style="margin-top:4px;font-size:0.82rem;">${state.timetable.filter(l => l.fachId === item.id).map(l => `${l.weekday} ${l.startTime}`).join(", ") || "Kein Stundenplan"}</p>
                     </div>
                   </div>
                   <div class="subject-row-actions">
@@ -4320,31 +5991,76 @@
               `}
             </div>
 
-            <form class="form-grid" data-form="subject" data-draft-form="subject" data-draft-id="${escapeHtml(subject?.id || "new")}">
-              <input type="hidden" name="id" value="${escapeHtml(values.id || "")}">
-              <div class="field">
-                <label for="subject-name">Fachname</label>
-                <input id="subject-name" type="text" name="name" required value="${escapeHtml(values.name)}" placeholder="Zum Beispiel Mathematik">
-              </div>
-              <div class="form-grid two">
+            <div style="display:grid;gap:18px;">
+              <form class="form-grid" data-form="subject" data-draft-form="subject" data-draft-id="${escapeHtml(subject?.id || "new")}">
+                <input type="hidden" name="id" value="${escapeHtml(values.id || "")}">
                 <div class="field">
-                  <label for="subject-color">Farbe</label>
-                  <input id="subject-color" type="color" name="color" required value="${escapeHtml(values.color)}">
+                  <label for="subject-name">Fachname</label>
+                  <input id="subject-name" type="text" name="name" required value="${escapeHtml(values.name)}" placeholder="Zum Beispiel Mathematik">
+                </div>
+                <div class="form-grid two">
+                  <div class="field">
+                    <label for="subject-color">Farbe</label>
+                    <input id="subject-color" type="color" name="color" required value="${escapeHtml(values.color)}">
+                  </div>
+                  <div class="field">
+                    <label for="subject-room">Raum</label>
+                    <input id="subject-room" type="text" name="room" value="${escapeHtml(values.room)}" placeholder="Zum Beispiel B204">
+                  </div>
                 </div>
                 <div class="field">
-                  <label for="subject-room">Raum</label>
-                  <input id="subject-room" type="text" name="room" value="${escapeHtml(values.room)}" placeholder="Zum Beispiel B204">
+                  <label for="subject-teacher">Lehrperson</label>
+                  <input id="subject-teacher" type="text" name="teacher" value="${escapeHtml(values.teacher)}" placeholder="Zum Beispiel Frau Keller">
                 </div>
-              </div>
-              <div class="field">
-                <label for="subject-teacher">Lehrperson</label>
-                <input id="subject-teacher" type="text" name="teacher" value="${escapeHtml(values.teacher)}" placeholder="Zum Beispiel Frau Keller">
-              </div>
-              <div class="button-row">
-                <button class="button" type="submit">${subject ? "Fach speichern" : "Fach anlegen"}</button>
-                <button class="ghost-button" type="button" data-action="open-subject-manager">Neues Fach</button>
-              </div>
-            </form>
+                <div class="button-row">
+                  <button class="button" type="submit">${subject ? "Fach speichern" : "Fach anlegen"}</button>
+                  <button class="ghost-button" type="button" data-action="open-subject-manager">Neues Fach</button>
+                </div>
+              </form>
+
+              ${subject ? `
+                <div style="border-top:1px solid var(--line);padding-top:18px;">
+                  <p class="eyebrow" style="margin-bottom:12px;">Stunden im Plan</p>
+                  ${subjectLessons.length ? `
+                    <div class="mini-list" style="margin-bottom:14px;">
+                      ${subjectLessons.map(l => `
+                        <div class="mini-item" style="padding:10px 14px;">
+                          <div class="mini-item-content">
+                            <strong>${l.weekday}</strong> &nbsp; ${l.startTime} – ${l.endTime} &nbsp; Raum ${escapeHtml(l.room || values.room || "—")}
+                          </div>
+                          <button class="tiny-button danger" type="button" data-action="delete-lesson" data-lesson-id="${l.id}" aria-label="Lektion löschen"><span class="material-symbols-outlined" style="font-size:1.1em;">delete</span></button>
+                        </div>
+                      `).join("")}
+                    </div>
+                  ` : `<p style="color:var(--muted);font-size:0.9rem;margin-bottom:14px;">Noch keine Lektionen eingetragen.</p>`}
+                  
+                  <form class="form-grid" data-form="lesson-quick" data-subject-id="${escapeHtml(subject.id)}">
+                    <p style="font-weight:600;margin:0 0 8px;">Neue Lektion hinzufügen</p>
+                    <div class="form-grid two">
+                      <div class="field">
+                        <label>Wochentag</label>
+                        <select name="weekday" required>
+                          ${WEEKDAYS.map((day) => `<option value="${day}" ${lessonDraft.weekday === day ? "selected" : ""}>${day}</option>`).join("")}
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>Startzeit</label>
+                        <input type="time" name="startTime" required value="${escapeHtml(lessonDraft.startTime)}">
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Raum (optional)</label>
+                      <input type="text" name="room" value="${escapeHtml(lessonDraft.room)}" placeholder="${escapeHtml(values.room || "Stammraum verwenden")}">
+                    </div>
+                    <div class="button-row">
+                      <button class="button" type="submit"><span class="material-symbols-outlined">add</span> Lektion (45 Min.) anlegen</button>
+                      <button class="ghost-button" type="button" data-action="add-break-quick" data-break="5" data-subject-id="${escapeHtml(subject.id)}">+ 5 Min. Pause</button>
+                      <button class="ghost-button" type="button" data-action="add-break-quick" data-break="20" data-subject-id="${escapeHtml(subject.id)}">+ 20 Min. Pause</button>
+                    </div>
+                  </form>
+                </div>
+              ` : ""}
+            </div>
           </div>
         </div>
       `;
@@ -4421,7 +6137,6 @@
       renderNav();
       renderTopbar();
       renderView();
-      renderFab();
       if (appStatus.mode === "ready") {
         // Don't re-render the modal if a form element inside it has focus (prevents flicker/focus loss)
         const modalRoot = document.getElementById("modalRoot");
@@ -4602,6 +6317,7 @@
         return;
       }
 
+      const existing = data.id ? state.timetable.find((item) => item.id === data.id) : null;
       const subject = getSubject(data.fachId);
       const candidate = {
         id: data.id,
@@ -4609,7 +6325,7 @@
         fachId: data.fachId,
         startTime: data.startTime,
         endTime: data.endTime,
-        room: data.room.trim() || subject?.room || ""
+        room: existing?.room || subject?.room || ""
       };
 
       if (hasLessonOverlap(candidate)) {
@@ -4618,7 +6334,6 @@
       }
 
       if (data.id) {
-        const existing = state.timetable.find((item) => item.id === data.id);
         Object.assign(existing, candidate);
         clearDraft("lesson", data.id);
       } else {
@@ -4677,6 +6392,18 @@
 
     async function handleAction(button) {
       const action = button.dataset.action;
+      if (action === "start-demo") {
+        startDemo();
+        return;
+      }
+
+      if (action === "reset-demo") {
+        if (window.confirm("Alle deine Änderungen in der Demo verwerfen?")) {
+          startDemo({ fresh: true });
+        }
+        return;
+      }
+
       if (action === "set-auth-mode") {
         ui.authMode = button.dataset.authMode || "signin";
         renderApp();
@@ -4688,41 +6415,16 @@
         return;
       }
 
-      if (action === "admin-toggle-approval") {
+      if (action === "admin-delete-user") {
         if (!appStatus.isAdmin) return;
         const uid = button.dataset.uid;
-        const approved = button.dataset.approved === "true";
-        if (!approved) {
-          // Deleting user — show custom modal instead of window.confirm
-          const userName = appStatus.adminDetail?.displayName || appStatus.adminDetail?.email || uid;
-          openModal("confirm-delete", {
-            title: `„${userName}" endgültig löschen?`,
-            text: "Der Benutzer wird aus Firebase Authentication, Firestore und den Genehmigungen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
-            confirmAction: "confirm-delete-user",
-            payloadId: uid
-          });
-          return;
-        }
-        // Approving user — execute directly
-        button.disabled = true;
-        try {
-          const token = await getFreshIdToken();
-          await fetch("/api/admin/approve", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ uid, approved })
-          });
-          showToast("Benutzer genehmigt");
-          await refreshAdminAccess();
-          renderApp();
-        } catch (error) {
-          console.error(error);
-          showToast("Aktualisierung fehlgeschlagen");
-          button.disabled = false;
-        }
+        const userName = appStatus.adminDetail?.displayName || appStatus.adminDetail?.email || uid;
+        openModal("confirm-delete", {
+          title: `„${userName}" endgültig löschen?`,
+          text: "Der Benutzer wird aus Firebase Authentication, Firestore und den Genehmigungen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+          confirmAction: "confirm-delete-user",
+          payloadId: uid
+        });
         return;
       }
 
@@ -4738,7 +6440,7 @@
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ uid, approved: false })
+            body: JSON.stringify({ uid, deleteUser: true })
           });
           if (!response.ok) {
             throw new Error("API-Fehler");
@@ -4771,6 +6473,108 @@
             loadAdminUserDetail(ui.adminSelectedUid);
           }
         });
+        return;
+      }
+
+      if (action === "set-admin-filter") {
+        ui.adminFilterStatus = button.dataset.filter || "pending";
+        renderApp();
+        return;
+      }
+
+      if (action === "toggle-admin-checkbox") {
+        const uid = button.dataset.uid;
+        if (!uid) return;
+        if (ui.selectedAdminUids.has(uid)) {
+          ui.selectedAdminUids.delete(uid);
+        } else {
+          ui.selectedAdminUids.add(uid);
+        }
+        renderApp();
+        return;
+      }
+
+      if (action === "toggle-admin-select-all") {
+        const users = visibleAdminUsers();
+        const allSelected = users.length > 0 && users.every((user) => ui.selectedAdminUids.has(user.uid));
+        if (allSelected) {
+          users.forEach((user) => ui.selectedAdminUids.delete(user.uid));
+        } else {
+          users.forEach((user) => ui.selectedAdminUids.add(user.uid));
+        }
+        renderApp();
+        return;
+      }
+
+      if (action === "admin-bulk-approve") {
+        if (!appStatus.isAdmin || !ui.selectedAdminUids.size) return;
+        const selectedUids = [...ui.selectedAdminUids];
+        button.disabled = true;
+        try {
+          const token = await getFreshIdToken();
+          for (const uid of selectedUids) {
+            const response = await fetch("/api/admin/approve", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify({ uid, approved: true })
+            });
+            if (!response.ok) {
+              throw new Error("API-Fehler");
+            }
+          }
+          ui.selectedAdminUids.clear();
+          showToast(`${selectedUids.length} Benutzer freigegeben`);
+          await refreshAdminAccess();
+          if (ui.adminSelectedUid) {
+            await loadAdminUserDetail(ui.adminSelectedUid);
+          } else {
+            renderApp();
+          }
+        } catch (error) {
+          console.error(error);
+          showToast("Sammel-Freigabe fehlgeschlagen");
+          button.disabled = false;
+        }
+        return;
+      }
+
+      if (action === "admin-toggle-approval") {
+        if (!appStatus.isAdmin) return;
+        const uid = button.dataset.uid;
+        const approved = button.dataset.approved === "true";
+        if (!uid) return;
+        button.disabled = true;
+        try {
+          const token = await getFreshIdToken();
+          const response = await fetch("/api/admin/approve", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ uid, approved })
+          });
+          if (!response.ok) {
+            throw new Error("API-Fehler");
+          }
+          if (approved) {
+            ui.selectedAdminUids.delete(uid);
+          }
+          showToast(approved ? "Benutzer genehmigt" : "Genehmigung entfernt");
+          await refreshAdminAccess();
+          if (ui.adminSelectedUid === uid) {
+            await loadAdminUserDetail(uid);
+          } else {
+            renderApp();
+          }
+        } catch (error) {
+          console.error(error);
+          button.disabled = false;
+          showToast("Aktualisierung fehlgeschlagen");
+        }
         return;
       }
 
@@ -4850,18 +6654,7 @@
         return;
       }
 
-      if (action === "print") {
-        window.print();
-        return;
-      }
 
-      if (action === "toggle-theme") {
-        const currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-        state.settings.darkMode = currentTheme;
-        saveState();
-        applyTheme();
-        return;
-      }
 
       if (action === "close-modal") {
         closeModal();
@@ -4898,6 +6691,23 @@
       if (action === "toggle-homework-expand") {
         const id = button.dataset.homeworkId;
         ui.expandedHomework.has(id) ? ui.expandedHomework.delete(id) : ui.expandedHomework.add(id);
+        renderApp();
+        return;
+      }
+
+      if (action === "toggle-homework-status-button") {
+        toggleHomeworkStatus(button.dataset.homeworkId);
+        return;
+      }
+
+      if (action === "set-homework-status-filter") {
+        ui.homeworkFilterStatus = button.dataset.status || "alle";
+        renderApp();
+        return;
+      }
+
+      if (action === "set-homework-subject-filter") {
+        ui.homeworkFilterSubject = button.dataset.subjectId || "all";
         renderApp();
         return;
       }
@@ -5039,6 +6849,25 @@
         return;
       }
 
+      if (action === "add-break-quick") {
+        // Pause-Buttons: read the startTime from the quick-lesson form and advance it by breakMin
+        const breakMin = parseInt(button.dataset.break || "5", 10);
+        const form = button.closest('form[data-form="lesson-quick"]');
+        if (form) {
+          const startInput = form.querySelector('input[name="startTime"]');
+          if (startInput && startInput.value) {
+            const [sh, sm] = startInput.value.split(":").map(Number);
+            const totalMin = sh * 60 + sm + breakMin;
+            const newTime = `${String(Math.floor(totalMin / 60)).padStart(2, "0")}:${String(totalMin % 60).padStart(2, "0")}`;
+            startInput.value = newTime;
+            showToast(`Startzeit um ${breakMin} Min. Pause verschoben → ${newTime}`);
+          } else {
+            showToast(`${breakMin} Min. Pause: Bitte zuerst eine Startzeit eingeben`);
+          }
+        }
+        return;
+      }
+
       if (action === "confirm-reset") {
         state = {
           subjects: [],
@@ -5085,6 +6914,38 @@
         saveLessonFromForm(form);
       } else if (form.matches('[data-form="subject"]')) {
         saveSubjectFromForm(form);
+      } else if (form.matches('[data-form="lesson-quick"]')) {
+        // Quick lesson add from subject modal
+        const subjectId = form.dataset.subjectId;
+        const data = Object.fromEntries(new FormData(form).entries());
+        const subject = getSubject(subjectId);
+        if (!subjectId || !subject) return;
+        const startTime = data.startTime || "08:00";
+        // Calculate endTime: startTime + 45 minutes
+        const [sh, sm] = startTime.split(":").map(Number);
+        const totalEnd = sh * 60 + sm + 45;
+        const endTime = `${String(Math.floor(totalEnd / 60)).padStart(2, "0")}:${String(totalEnd % 60).padStart(2, "0")}`;
+        const candidate = {
+          id: "",
+          weekday: data.weekday,
+          fachId: subjectId,
+          startTime,
+          endTime,
+          room: (data.room || "").trim() || subject.room || ""
+        };
+        if (hasLessonOverlap(candidate)) {
+          showToast("Zeitblock überschneidet sich bereits");
+          return;
+        }
+        state.timetable.push({ ...candidate, id: generateId("lesson") });
+        ui.subjectLessonDrafts[subjectId] = {
+          weekday: data.weekday || "Mo",
+          startTime: endTime,
+          room: (data.room || "").trim()
+        };
+        saveState();
+        openModal("subjects", { subjectId });
+        renderApp();
       } else if (form.matches('[data-form="checklist-item"]')) {
         const exam = state.exams.find((entry) => entry.id === form.dataset.examId);
         if (!exam) {
@@ -5102,6 +6963,49 @@
 
     document.addEventListener("change", (event) => {
       const target = event.target;
+
+      if (target.matches("[data-admin-approval]")) {
+        (async () => {
+          if (!appStatus.isAdmin) {
+            target.checked = !target.checked;
+            return;
+          }
+
+          const uid = target.dataset.adminApproval;
+          const approved = target.checked;
+          target.disabled = true;
+
+          try {
+            const token = await getFreshIdToken();
+            const response = await fetch("/api/admin/approve", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify({ uid, approved })
+            });
+
+            if (!response.ok) {
+              throw new Error("API-Fehler");
+            }
+
+            showToast(approved ? "Benutzer genehmigt" : "Genehmigung entfernt");
+            await refreshAdminAccess();
+            if (ui.adminSelectedUid === uid) {
+              await loadAdminUserDetail(uid);
+            } else {
+              renderApp();
+            }
+          } catch (error) {
+            console.error(error);
+            target.checked = !approved;
+            target.disabled = false;
+            showToast("Aktualisierung fehlgeschlagen");
+          }
+        })();
+        return;
+      }
 
       if (target.matches("[data-homework-status]")) {
         toggleHomeworkStatus(target.dataset.homeworkStatus, target.checked);
@@ -5130,13 +7034,6 @@
       if (target.matches("[data-filter='homework-status']")) {
         ui.homeworkFilterStatus = target.value;
         renderApp();
-        return;
-      }
-
-      if (target.matches("[data-setting-toggle='darkMode']")) {
-        state.settings.darkMode = target.checked ? "dark" : "light";
-        saveState({ silent: false });
-        applyTheme();
         return;
       }
 
@@ -5205,7 +7102,11 @@
       }
     });
 
-    renderApp();
+    if (DEMO_REQUESTED) {
+      startDemo();
+    } else {
+      renderApp();
+    }
     startAuthentication();
   </script>
 </body>

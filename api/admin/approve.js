@@ -21,9 +21,22 @@ module.exports = async (req, res) => {
 
     const uid = String(body.uid || "").trim();
     const approved = Boolean(body.approved);
+    const deleteUser = body.deleteUser === true;
 
     if (!uid) {
       res.status(400).json({ error: "Missing uid" });
+      return;
+    }
+
+    if (deleteUser) {
+      try {
+        await auth.deleteUser(uid);
+      } catch (err) {
+        // Ignore if already deleted
+      }
+      await firestore.collection("users").doc(uid).delete();
+      await firestore.collection("approvals").doc(uid).delete();
+      res.status(200).json({ success: true, deleted: true });
       return;
     }
 
@@ -33,14 +46,10 @@ module.exports = async (req, res) => {
         updatedAt: new Date().toISOString()
       }, { merge: true });
     } else {
-      // User is being blocked, so we delete them entirely
-      try {
-        await auth.deleteUser(uid);
-      } catch (err) {
-        // Ignore if already deleted
-      }
-      await firestore.collection("users").doc(uid).delete();
-      await firestore.collection("approvals").doc(uid).delete();
+      await firestore.collection("approvals").doc(uid).set({
+        approved: false,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
     }
 
     res.status(200).json({ success: true, approved });
